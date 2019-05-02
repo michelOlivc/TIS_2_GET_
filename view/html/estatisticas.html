@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+        crossorigin="anonymous">
+    <title>G.E.T. - Gerenciador de Escalação de Times</title>
+    <link href="../css/estilo.css" rel="stylesheet" type="text/css">
+    </link>
+</head>
+
+<body>
+    <header>
+        <div id="logo"></div>
+        <ul class="nav nav-pills nav-fill">
+            <li class="nav-item">
+                <a class="nav-link" href="medico.html">Situação médica</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="cartoes.html">Cartões</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="estatisticas.html">Estatísticas</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Escalação</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Jogadores</a>
+            </li>
+        </ul>
+    </header>
+    <div class="conteudo" style="padding-top: 30px;">
+        <div class="row">
+            <div class="col-xl-4 col-lg-4 col-md-4">
+                <table class="table" style="border:1px solid red">
+                    <tr>
+                        <th>Jogador</th><th>Posição</th>
+                    </tr>
+                    <tr>
+                        <td>Marcos</td><td>Goleiro</td>
+                    </tr>
+                    <tr>
+                        <td>Cafú</td><td>Lateral-direito</td>
+                    </tr>
+                    <tr>
+                        <td>Lúcio</td><td>Zagueiro</td>
+                    </tr>
+                    <tr>
+                        <td>Roque Júnior</td><td>Zagueiro</td>
+                    </tr>    
+                    <tr>
+                        <td>Edmílson</td><td>Volante e Zagueiro</td>
+                    </tr>
+                    <tr>
+                        <td>Roberto Carlos</td><td>Lateral-esquerdo</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-xl-8 col-lg-8 col-md-8">
+                <form action="">
+                    <div class="form-group row">
+                        <div class="col-xl-8 col-lg-8 col-md-8">
+                            <label for="nome">Nome do jogador</label><br>
+                            <input name="nome" type="text" id="nome" class="form-control" /><br>
+                        </div>
+                        <div class="col-xl-4 col-lg-4 col-md-4">
+                            <label for="campeonato">Campeonado</label><br>
+                            <select name="campeonato" type="text" id="campeonato" class="form-control">
+                                <option value="0">
+                                    <null>
+                                </option>
+                                <option value="1">Campeonato Estadual</option>
+                                <option value="2">Campeonato Brasileiro</option>
+                            </select>
+                        </div>
+                        <div class="col-xl-12 col-lg-12 col-md-12" style="margin: 40px 0">
+                            <table class="table table-borderless">
+                                <tr>
+                                    <th colspan="2">Última partida</th>
+                                    <th colspan="2">Média do campeonato</th>
+                                </tr>
+                                <tr>
+                                    <td>Gols</td>
+                                    <td>999</td>
+                                    <td>Gols</td>
+                                    <td>999</td>
+                                </tr>
+                                <tr>
+                                    <td>Passes</td>
+                                    <td>999</td>
+                                    <td>Passes</td>
+                                    <td>999</td>
+                                </tr>
+                                <tr>
+                                    <td>Assistências</td>
+                                    <td>999</td>
+                                    <td>Assistências</td>
+                                    <td>999</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <footer></footer>
+    <script src="https://code.jquery.com/jquery-3.4.0.slim.min.js" integrity="sha256-ZaXnYkHGqIhqTbJ6MB4l9Frs/r7U4jlx7ir8PJYBqbI="
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js" integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

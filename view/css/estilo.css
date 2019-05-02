@@ -1,0 +1,19 @@
+/*REGRAS GERAIS DAS PÁGINAS*/
+
+.conteudo {
+    background-color: lightslategray;
+    padding: 15px;
+    min-height: 600px;
+}
+
+#logo {
+    min-height: 150px;
+}
+
+header > ul {
+    padding: 15px 0;
+    background-color: black;
+}
+
+/*REGRAS DO FORMULÁRIO DA TELA DE SITUAÇÃO MÉDICA*/
+
