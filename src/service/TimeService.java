@@ -12,12 +12,12 @@ public class TimeService {
 	private TimeDAO timeDAO = new TimeDAO();
 	private JogadorDAO jogadorDAO = new JogadorDAO();
 	
-	public String carregaTime(Request request) {
+	public String carregarTime(Request request) {
 		Time time = timeDAO.get();
 		return time.toJson().toString();
 	}
 	
-	public String atualizaTime(Request request) {
+	public String atualizarTime(Request request) {
 		Query query = request.getQuery();
 		
 		try {

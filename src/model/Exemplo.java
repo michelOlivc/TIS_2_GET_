@@ -1,23 +1,20 @@
 package model;
 
-import java.io.File;
+import java.util.ArrayList;
 
-import dao.JogadorDAO;
-import model.enums.Escala;
+import dao.TimeDAO;
 
 public class Exemplo {
 	public static void main(String[] args) {
+		Time time = new Time();
 		
-		Jogador j = new Jogador("Roberto Carlos", "Lateral");
-		j.setDrible(Escala.TRES);
-		j.setFolego(Escala.QUATRO);
-		j.setVelocidade(Escala.CINCO);
+		time.setId(1);
+		time.setNome("Clube Atlético Mineiro");
+		time.setListaJogadores(new ArrayList<Jogador>());
 		
-		JogadorDAO dao = new JogadorDAO();
-		dao.add(j);
-//		System.out.println(new File(".").getAbsolutePath());
+		TimeDAO dao = new TimeDAO();
+		dao.add(time);
 		
-		System.out.println(dao.get(4).toJson().toString());
-		
+		System.out.println(dao.get().toJson().toString());
 	}
 }

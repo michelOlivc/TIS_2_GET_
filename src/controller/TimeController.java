@@ -13,24 +13,19 @@ public class TimeController implements Controller {
 	public void rotearRequisicao(Request request, Response response) {
 		try {
 			String path = request.getPath().getPath();
-			String acao = path.split("/")[path.split("/").length - 1];
 			String method = request.getMethod();
 			String message;
 			
 			if("GET".equals(method)) {
-				message = service.buscarJogador(request);
-				this.enviaResposta(Status.OK, response, message);
-				
-			} else if(acao.startsWith("list") && "GET".equals(method)) {
-				message = service.listarJogadores(request);
+				message = service.carregarTime(request);
 				this.enviaResposta(Status.OK, response, message);
 				
 			} else if("POST".equals(method)) {
-				message = service.adicionarJogador(request);
+				message = service.incluirJogador(request);
 				this.enviaResposta(Status.CREATED, response, message);
 				
 			} else if("PUT".equals(method)) {
-				message = service.atualizarJogador(request);
+				message = service.atualizarTime(request);
 				if (message == null) {
 					this.naoEncontrado(response, path);
 				} else {
