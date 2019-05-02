@@ -84,7 +84,10 @@ public class Time implements JsonFormatter {
 		JSONObject obj = new JSONObject();
 		obj.put("id", this.id);
 		obj.put("nome", this.nome);
-		obj.put("listaJogadores", toJsonArray());
+		
+		if(this.listaJogadores != null && !this.listaJogadores.isEmpty()) {
+			obj.put("listaJogadores", toJsonArray());
+		}
 		
 		return obj;
 	}

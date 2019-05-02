@@ -25,12 +25,14 @@ public class TimeDAO {
 				t.setId(Integer.parseInt(dados[0]));
 				t.setNome(dados[1]);
 				
-				String [] idJogadores = dados[2].split("-");
-				for(String s : idJogadores) {
-					Integer id = Integer.parseInt(s);
-					Jogador jogador = jogadorDAO.get(id);
-					
-					t.adicionarJogador(jogador);
+				if(dados.length > 2 && !dados[2].equals("")) {
+					String [] idJogadores = dados[2].split("-");
+					for(String s : idJogadores) {
+						Integer id = Integer.parseInt(s);
+						Jogador jogador = jogadorDAO.get(id);
+						
+						t.adicionarJogador(jogador);
+					}
 				}
 				retorno = t;
 			}
