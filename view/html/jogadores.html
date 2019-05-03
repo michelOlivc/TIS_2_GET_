@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+        crossorigin="anonymous">
+    <title>G.E.T. - Gerenciador de Escalação de Times</title>
+    <link href="../css/estilo.css" rel="stylesheet" type="text/css"></link>
+    <script type="text/javascript" src="../js/ajaxRequest.js" ></script>
+</head>
+
+<body>
+    <header>
+        <div id="logo"></div>
+        <ul class="nav nav-pills nav-fill">
+            <li class="nav-item">
+                <a class="nav-link" href="medico.html">Situação médica</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="cartoes.html">Cartões</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="estatisticas.html">Estatísticas</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Escalação</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="jogadores.html">Jogadores</a>
+            </li>
+        </ul>
+    </header>
+    <div class="conteudo" style="padding-top: 30px;">
+        <div class="row">
+            <div class="col-xl-4 col-lg-4 col-md-4">
+                <h6>Lista de jogadores</h6>
+                <table class="table" style="border:1px solid red">
+                    <tr>
+                        <th>Jogador</th>
+                        <th>Posição</th>
+                    </tr>
+                    <!-- append jogadores -->
+                </table>
+            </div>
+            <div class="col-xl-8 col-lg-8 col-md-8">
+                <form action="127.0.0.1:16700/Jogador" method="POST" id="form-jogador">
+                    <div class="form-group row">
+                        <div class="col-xl-12 col-lg-12 col-md-12">
+                            <span id="id"></span>
+                        </div>
+                        <div class="col-xl-8 col-lg-8 col-md-8">
+                            <label for="nome">Nome do jogador</label><br>
+                            <input name="nome" type="text" id="nome" class="form-control" /><br>
+                        </div>
+                        <div class="col-xl-4 col-lg-4 col-md-4">
+                            <label for="posicao">Posição</label><br>
+                            <input name="posicao" type="text" id="posicao" class="form-control" /><br>
+                        </div>
+                        <div class="col-xl-4 col-lg-4 col-md-4">
+                            <label for="folego">Fôlego</label><br>
+                            <input name="folego" type="text" id="folego" class="form-control" /><br>
+                        </div>
+                        <div class="col-xl-4 col-lg-4 col-md-4">
+                            <label for="velocidade">Velocidade</label><br>
+                            <input name="velocidade" type="text" id="velocidade" class="form-control" /><br>
+                        </div>
+                        <div class="col-xl-4 col-lg-4 col-md-4">
+                            <label for="drible">Drible</label><br>
+                            <input name="drible" type="text" id="drible" class="form-control" /><br>
+                        </div>
+                    </div>
+                    <div class="row">
+                        &emsp;<button class="btn btn-primary" onclick="addJogador()">Salvar Jogador</button>&emsp;
+                        &emsp;<button class="btn btn-primary" onclick="">Excluir Jogador</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <footer></footer>
+    <script src="https://code.jquery.com/jquery-3.4.0.slim.min.js" integrity="sha256-ZaXnYkHGqIhqTbJ6MB4l9Frs/r7U4jlx7ir8PJYBqbI=" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js" integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o"
+        crossorigin="anonymous"></script>
+    <script>
+        function getJogador(id) {
+            var xmlhttp = new FactoryXMLHttpRequest();
+
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4) {
+                    var jsonObj = JSON.parse(xmlhttp.responseText);
+
+                    $("#id").val(jsonObj.id);
+                    $("nome").val(jsonObj.nome);
+                    $("posicao").val(jsonObj.posicao);
+                    $("folego").val(jsonObj.folego);
+                    $("velocidade").val(jsonObj.velocidade);
+                    $("drible").val(jsonObj.drible);
+                }
+            }
+
+            if (xmlhttp) {
+                xmlhttp.open('get', '/Jogador/' + id, true);
+                xmlhttp.send();
+            }
+        }
+
+        function listJogadores() {
+            var xmlhttp = new FactoryXMLHttpRequest();
+
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4) {
+                    var jsonObj = JSON.parse(xmlhttp.responseText);
+
+                    for(var i = 0; i < jsonObj.listaJogadores.length; i++) {
+                        var content = `<tr onclick="getJogador(${jsonObj.id})">
+                                        <td>${jsonObj.nome}</td>
+                                        <td>${jsonObj.posicao}</td>
+                                    </tr>`;
+                        $("table").append(content);
+                    }
+                }
+            }
+
+            if (xmlhttp) {
+                xmlhttp.open('get', '/Jogador', true);
+                xmlhttp.send();
+            }
+        }
+
+        function addJogador() {
+            $("#form-jogador").submit();
+        }
+
+        function updateJogador() {}
+
+        function deleteJogador() {
+            var xmlhttp = new FactoryXMLHttpRequest();
+
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4) {
+                    var jsonObj = JSON.parse(xmlhttp.responseText);
+
+                    for(var i = 0; i < jsonObj.listaJogadores.length; i++) {
+                        var content = `<tr onclick="getJogador(${jsonObj.id})">
+                                        <td>${jsonObj.nome}</td>
+                                        <td>${jsonObj.posicao}</td>
+                                    </tr>`;
+                        $("table").append(content);
+                    }
+                }
+            }
+
+            if (xmlhttp) {
+                xmlhttp.open('get', '/Jogador', true);
+                xmlhttp.send();
+            }
+        }
+    </script>
+</body>
+
+</html>
