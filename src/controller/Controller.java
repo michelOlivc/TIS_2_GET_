@@ -2,7 +2,6 @@ package controller;
 
 import java.io.PrintStream;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
@@ -31,6 +30,7 @@ public interface Controller {
 
 		if (str != null)
 			body.println(str);
+		
 		body.close();
 	}
 }

@@ -3,14 +3,12 @@
 
 <head>
     <meta charset="UTF-8">
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-        crossorigin="anonymous">
     <title>G.E.T. - Gerenciador de Escalação de Times</title>
-    <link href="../css/estilo.css" rel="stylesheet" type="text/css"></link>
-    <script type="text/javascript" src="../js/ajaxRequest.js" ></script>
+    <link href="../css/estilo.css" rel="stylesheet" type="text/css">
+    <link href="../bootstrap-4.3.1/css/bootstrap.css" rel="stylesheet" type="text/css">
 </head>
 
-<body>
+<body onload="listJogadores()">
     <header>
         <div id="logo"></div>
         <ul class="nav nav-pills nav-fill">
@@ -72,18 +70,17 @@
                     </div>
                     <div class="row">
                         &emsp;<button class="btn btn-primary" onclick="addJogador()">Salvar Jogador</button>&emsp;
-                        &emsp;<button class="btn btn-primary" onclick="">Excluir Jogador</button>
+                        &emsp;<button class="btn btn-primary" onclick="deleteJogador()">Excluir Jogador</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
     <footer></footer>
-    <script src="https://code.jquery.com/jquery-3.4.0.slim.min.js" integrity="sha256-ZaXnYkHGqIhqTbJ6MB4l9Frs/r7U4jlx7ir8PJYBqbI=" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-        crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js" integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o"
-        crossorigin="anonymous"></script>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js' type='text/javascript'></script>
+    <!-- <script src="../bootstrap-4.3.1/js/bootstrap.js"></script> -->
+    <script src="../js/ajaxRequest.js"></script>
+
     <script>
         function getJogador(id) {
             var xmlhttp = new FactoryXMLHttpRequest();
@@ -93,16 +90,16 @@
                     var jsonObj = JSON.parse(xmlhttp.responseText);
 
                     $("#id").val(jsonObj.id);
-                    $("nome").val(jsonObj.nome);
-                    $("posicao").val(jsonObj.posicao);
-                    $("folego").val(jsonObj.folego);
-                    $("velocidade").val(jsonObj.velocidade);
-                    $("drible").val(jsonObj.drible);
+                    $("#nome").val(jsonObj.nome);
+                    $("#posicao").val(jsonObj.posicao);
+                    $("#folego").val(jsonObj.folego);
+                    $("#velocidade").val(jsonObj.velocidade);
+                    $("#drible").val(jsonObj.drible);
                 }
             }
 
             if (xmlhttp) {
-                xmlhttp.open('get', '/Jogador/' + id, true);
+                xmlhttp.open('get', 'http://localhost:8080/Jogador/' + id, true);
                 xmlhttp.send();
             }
         }
@@ -125,7 +122,7 @@
             }
 
             if (xmlhttp) {
-                xmlhttp.open('get', '/Jogador', true);
+                xmlhttp.open('get', 'http://localhost:8080/Jogador/', true);
                 xmlhttp.send();
             }
         }
