@@ -24,6 +24,8 @@ public interface Controller {
 
 		response.setValue("Content-Type", "application/json");
 		response.setValue("Server", "Controle de estoqueService (1.0)");
+		response.setValue("Access-Control-Allow-Origin", "null");
+//		response.setValue("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE");
 		response.setDate("Date", time);
 		response.setDate("Last-Modified", time);
 		response.setStatus(status);
