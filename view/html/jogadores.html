@@ -42,7 +42,7 @@
                 </table>
             </div>
             <div class="col-xl-8 col-lg-8 col-md-8">
-                <form action="127.0.0.1:16700/Jogador" method="POST" id="form-jogador">
+                <form action="" method="POST" id="form-jogador">
                     <div class="form-group row">
                         <div class="col-xl-12 col-lg-12 col-md-12">
                             <span id="id"></span>
@@ -82,6 +82,8 @@
     <script src="../js/ajaxRequest.js"></script>
 
     <script>
+        $("#form-jogador").attr('action', 'http://localhost:' + porta + '/Jogador');
+        
         function getJogador(id) {
             var xmlhttp = new FactoryXMLHttpRequest();
 
@@ -89,7 +91,7 @@
                 if (xmlhttp.readyState == 4) {
                     var jsonObj = JSON.parse(xmlhttp.responseText);
 
-                    $("#id").val(jsonObj.id);
+                    $("#id").html(jsonObj.id);
                     $("#nome").val(jsonObj.nome);
                     $("#posicao").val(jsonObj.posicao);
                     $("#folego").val(jsonObj.folego);
@@ -99,7 +101,7 @@
             }
 
             if (xmlhttp) {
-                xmlhttp.open('get', 'http://localhost:8080/Jogador/' + id, true);
+                xmlhttp.open('get', 'http://localhost:' + porta + '/Jogador/' + id, true);
                 xmlhttp.send();
             }
         }
@@ -109,12 +111,13 @@
 
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4) {
-                    var jsonObj = JSON.parse(xmlhttp.responseText);
+                    var resposta = JSON.parse(xmlhttp.responseText);
+                    var listaJogadores = resposta.listaJogadores;
 
-                    for(var i = 0; i < jsonObj.listaJogadores.length; i++) {
-                        var content = `<tr onclick="getJogador(${jsonObj.id})">
-                                        <td>${jsonObj.nome}</td>
-                                        <td>${jsonObj.posicao}</td>
+                    for(var i = 0; i < listaJogadores.length; i++) {
+                        var content = `<tr onclick="getJogador(${listaJogadores[i].id})">
+                                        <td>${listaJogadores[i].nome}</td>
+                                        <td>${listaJogadores[i].posicao}</td>
                                     </tr>`;
                         $("table").append(content);
                     }
@@ -122,37 +125,71 @@
             }
 
             if (xmlhttp) {
-                xmlhttp.open('get', 'http://localhost:8080/Jogador/', true);
+                xmlhttp.open('get', 'http://localhost:' + porta + '/Jogador/', true);
                 xmlhttp.send();
             }
         }
 
         function addJogador() {
-            $("#form-jogador").submit();
+            var xmlhttp = new FactoryXMLHttpRequest();
+
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4) {
+                    window.location.reload();
+                }
+            }
+
+            if (xmlhttp) {
+                var nome = $("#nome").val();
+                var pos = $("#posicao").val(jsonObj.posicao);
+                var fol = $("#folego").val(jsonObj.folego);
+                var vel = $("#velocidade").val(jsonObj.velocidade);
+                var dri = $("#drible").val(jsonObj.drible);
+                
+                xmlhttp.open('post', 'http://localhost:' + porta + '/Jogador/', true);
+                xmlhttp.send('nome='+nome+'&posicao='+pos+'&folego='+fol+'&velocidade='+vel+'&drible='+dri);
+            }
+            //$("#form-jogador").submit();
         }
 
-        function updateJogador() {}
+        function updateJogador() {
+            var xmlhttp = new FactoryXMLHttpRequest();
+
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4) {
+                    window.location.reload();
+                }
+            }
+
+            if (xmlhttp) {
+                var id = $("#id").html();
+                var nome = $("#nome").val();
+                var pos = $("#posicao").val(jsonObj.posicao);
+                var fol = $("#folego").val(jsonObj.folego);
+                var vel = $("#velocidade").val(jsonObj.velocidade);
+                var dri = $("#drible").val(jsonObj.drible);
+                
+                xmlhttp.open('put', 'http://localhost:' + porta + '/Jogador', true);
+                xmlhttp.setRequestHeader("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE");
+                xmlhttp.send('id='+id+'nome='+nome+'&posicao='+pos+'&folego='+fol+'&velocidade='+vel+'&drible='+dri);
+            }
+        }
 
         function deleteJogador() {
             var xmlhttp = new FactoryXMLHttpRequest();
 
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4) {
-                    var jsonObj = JSON.parse(xmlhttp.responseText);
-
-                    for(var i = 0; i < jsonObj.listaJogadores.length; i++) {
-                        var content = `<tr onclick="getJogador(${jsonObj.id})">
-                                        <td>${jsonObj.nome}</td>
-                                        <td>${jsonObj.posicao}</td>
-                                    </tr>`;
-                        $("table").append(content);
-                    }
+                   
                 }
             }
 
             if (xmlhttp) {
-                xmlhttp.open('get', '/Jogador', true);
-                xmlhttp.send();
+                var id = $("#id").html();
+                
+                xmlhttp.open('delete', 'http://localhost:' + porta + '/Jogador', true);
+                xmlhttp.setRequestHeader("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE");
+                xmlhttp.send('id='+id);
             }
         }
     </script>
