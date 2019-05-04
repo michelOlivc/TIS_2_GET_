@@ -16,5 +16,7 @@ public class Exemplo {
 		dao.add(time);
 		
 		System.out.println(dao.get().toJson().toString());
+		
+		//FichaMedica teste = new FichaMedica(1, joao, GRAVE, );
 	}
 }
