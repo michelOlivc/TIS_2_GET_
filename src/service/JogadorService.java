@@ -48,7 +48,7 @@ public class JogadorService {
 
 			jogadorDAO.add(jogador);
 
-			return listaJogadoresJSON().toString();
+			return query.get("url");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "Erro ao adicionar Jogador";
@@ -69,7 +69,7 @@ public class JogadorService {
 
 			jogadorDAO.update(jogador);
 
-			return listaJogadoresJSON().toString();
+			return query.get("url");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "Erro ao atualizar Jogador";
@@ -81,11 +81,11 @@ public class JogadorService {
 		
 		try {
 			Jogador jogador = new Jogador();
-			jogador.setId(query.getInteger("id"));
+			jogador.setId(Integer.parseInt(query.get("id")));
 			
 			jogadorDAO.delete(jogador);
 			
-			return listaJogadoresJSON().toString();
+			return query.get("url");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "Erro ao excluir Jogador.";

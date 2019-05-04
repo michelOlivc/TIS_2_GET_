@@ -69,7 +69,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        &emsp;<button class="btn btn-primary" onclick="addJogador()">Salvar Jogador</button>&emsp;
+                        &emsp;<button class="btn btn-primary" onclick="putJogador()">Salvar Jogador</button>&emsp;
                         &emsp;<button class="btn btn-primary" onclick="deleteJogador()">Excluir Jogador</button>
                     </div>
                 </form>
@@ -82,8 +82,6 @@
     <script src="../js/ajaxRequest.js"></script>
 
     <script>
-        $("#form-jogador").attr('action', 'http://localhost:' + porta + '/Jogador');
-        
         function getJogador(id) {
             var xmlhttp = new FactoryXMLHttpRequest();
 
@@ -101,7 +99,7 @@
             }
 
             if (xmlhttp) {
-                xmlhttp.open('get', 'http://localhost:' + porta + '/Jogador/' + id, true);
+                xmlhttp.open('get', 'http://localhost:' + porta + '/Jogador/get/' + id, true);
                 xmlhttp.send();
             }
         }
@@ -125,7 +123,7 @@
             }
 
             if (xmlhttp) {
-                xmlhttp.open('get', 'http://localhost:' + porta + '/Jogador/', true);
+                xmlhttp.open('get', 'http://localhost:' + porta + '/Jogador/list', true);
                 xmlhttp.send();
             }
         }
@@ -135,21 +133,21 @@
 
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4) {
-                    window.location.reload();
+                    window.location.href = xmlhttp.responseText;
                 }
             }
 
             if (xmlhttp) {
                 var nome = $("#nome").val();
-                var pos = $("#posicao").val(jsonObj.posicao);
-                var fol = $("#folego").val(jsonObj.folego);
-                var vel = $("#velocidade").val(jsonObj.velocidade);
-                var dri = $("#drible").val(jsonObj.drible);
+                var pos = $("#posicao").val();
+                var fol = $("#folego").val();
+                var vel = $("#velocidade").val();
+                var dri = $("#drible").val();
                 
-                xmlhttp.open('post', 'http://localhost:' + porta + '/Jogador/', true);
-                xmlhttp.send('nome='+nome+'&posicao='+pos+'&folego='+fol+'&velocidade='+vel+'&drible='+dri);
+                xmlhttp.open('post', 'http://localhost:' + porta + '/Jogador/add', true);
+                xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                xmlhttp.send('nome='+nome+'&posicao='+pos+'&folego='+fol+'&velocidade='+vel+'&drible='+dri+'&url='+window.location.href);
             }
-            //$("#form-jogador").submit();
         }
 
         function updateJogador() {
@@ -157,21 +155,29 @@
 
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4) {
-                    window.location.reload();
+                    window.location.href = xmlhttp.responseText;
                 }
             }
 
             if (xmlhttp) {
                 var id = $("#id").html();
                 var nome = $("#nome").val();
-                var pos = $("#posicao").val(jsonObj.posicao);
-                var fol = $("#folego").val(jsonObj.folego);
-                var vel = $("#velocidade").val(jsonObj.velocidade);
-                var dri = $("#drible").val(jsonObj.drible);
+                var pos = $("#posicao").val();
+                var fol = $("#folego").val();
+                var vel = $("#velocidade").val();
+                var dri = $("#drible").val();
                 
-                xmlhttp.open('put', 'http://localhost:' + porta + '/Jogador', true);
-                xmlhttp.setRequestHeader("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE");
-                xmlhttp.send('id='+id+'nome='+nome+'&posicao='+pos+'&folego='+fol+'&velocidade='+vel+'&drible='+dri);
+                xmlhttp.open('post', 'http://localhost:' + porta + '/Jogador/update', true);
+                xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                xmlhttp.send('id='+id+'&nome='+nome+'&posicao='+pos+'&folego='+fol+'&velocidade='+vel+'&drible='+dri+'&url='+window.location.href);
+            }
+        }
+        
+        function putJogador() {
+            if($("#id").html() == "") {
+                addJogador();
+            } else {
+                updateJogador();
             }
         }
 
@@ -180,16 +186,16 @@
 
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4) {
-                   
+                   window.location.href = xmlhttp.responseText;
                 }
             }
 
             if (xmlhttp) {
                 var id = $("#id").html();
                 
-                xmlhttp.open('delete', 'http://localhost:' + porta + '/Jogador', true);
-                xmlhttp.setRequestHeader("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE");
-                xmlhttp.send('id='+id);
+                xmlhttp.open('post', 'http://localhost:' + porta + '/Jogador/delete', true);
+                xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                xmlhttp.send('id='+id+'&url='+window.location.href);
             }
         }
     </script>

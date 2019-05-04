@@ -25,13 +25,30 @@ public interface Controller {
 		response.setValue("Content-Type", "application/json");
 		response.setValue("Server", "Controle de estoqueService (1.0)");
 		response.setValue("Access-Control-Allow-Origin", "null");
-//		response.setValue("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE");
 		response.setDate("Date", time);
 		response.setDate("Last-Modified", time);
 		response.setStatus(status);
 
 		if (str != null)
 			body.println(str);
+		
+		body.close();
+	}
+	
+	default void redireciona(Status status, Response response, String url) throws Exception {
+
+		PrintStream body = response.getPrintStream();
+		long time = System.currentTimeMillis();
+
+		response.setValue("Content-Type", "text/html");
+		response.setValue("Server", "Controle de estoqueService (1.0)");
+		response.setValue("Access-Control-Allow-Origin", "null");
+		response.setDate("Date", time);
+		response.setDate("Last-Modified", time);
+		response.setStatus(status);
+
+		if (url != null)
+			body.println(url);
 		
 		body.close();
 	}
