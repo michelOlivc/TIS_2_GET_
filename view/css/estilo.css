@@ -15,5 +15,7 @@ header > ul {
     background-color: black;
 }
 
-/*REGRAS DO FORMULÁRIO DA TELA DE SITUAÇÃO MÉDICA*/
+a.nav-link, div.dropdown-menu {
+    margin-left: 135px;
+}
 

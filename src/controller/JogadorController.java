@@ -42,9 +42,11 @@ public class JogadorController implements Controller {
 				if("add".equals(acao)) {
 					url = service.adicionarJogador(request);
 					this.redireciona(Status.CREATED, response, url);
+				
 				} else if("update".equals(acao)) {
 					url = service.atualizarJogador(request);
 					this.redireciona(Status.OK, response, url);
+				
 				} else if("delete".equals(acao)) {
 					url = service.removerJogador(request);
 					this.redireciona(Status.OK, response, url);

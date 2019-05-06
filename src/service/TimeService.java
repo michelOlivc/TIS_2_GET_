@@ -17,7 +17,7 @@ public class TimeService {
 		return time.toJson().toString();
 	}
 	
-	public String atualizarTime(Request request) {
+	public String atualizarNomeDoTime(Request request) {
 		Query query = request.getQuery();
 		
 		try {
@@ -25,9 +25,8 @@ public class TimeService {
 			time.setNome(query.get("nomeTime"));
 			
 			timeDAO.update(time);
-			time = timeDAO.get();
 			
-			return time.toJson().toString();
+			return query.get("url");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return e.getMessage();
@@ -38,17 +37,14 @@ public class TimeService {
 		Query query = request.getQuery();
 		try {
 			Time time = timeDAO.get();
-			String idJogadores = query.get("incluirJogadores");
+			String id = query.get("id");
 		
-			for(String id : idJogadores.split(",")) {
-				Jogador jogador = jogadorDAO.get(Integer.parseInt(id));
-				time.adicionarJogador(jogador);
-			}
+			Jogador jogador = jogadorDAO.get(Integer.parseInt(id));
+			time.adicionarJogador(jogador);
 		
 			timeDAO.update(time);
-			time = timeDAO.get();
 			
-			return time.toJson().toString();
+			return query.get("url");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return e.getMessage();
@@ -59,21 +55,17 @@ public class TimeService {
 		Query query = request.getQuery();
 		try {
 			Time time = timeDAO.get();
-			String idJogadores = query.get("removerJogadores");
+			String id = query.get("id");
 		
-			for(String id : idJogadores.split(",")) {
-				Jogador jogador = jogadorDAO.get(Integer.parseInt(id));
-				time.removerJogador(jogador);
-			}
+			Jogador jogador = jogadorDAO.get(Integer.parseInt(id));
+			time.removerJogador(jogador);
 		
 			timeDAO.update(time);
-			time = timeDAO.get();
 			
-			return time.toJson().toString();
+			return query.get("url");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return e.getMessage();
 		}
 	}
-	
 }
