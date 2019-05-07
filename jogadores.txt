@@ -1,1 +1,10 @@
-3;Lucio;Zagueiro;1;2;1;
+1;Lucio;Zagueiro;3;2;2;
+2;Neymar;Atacante;2;2;3;
+3;Ronaldo;Atacante;2;2;1;
+4;Ze;Atacante;2;2;1;
+5;Diego;Zagueiro;3;2;1;
+6;Zidane;Volante;3;2;1;
+7;Messi;Volante;3;2;1;
+8;Ganso;Atacante;2;2;1;
+9;Pato;Zagueiro;2;2;1;
+10;Tafarel;Goleiro;1;2;1;
