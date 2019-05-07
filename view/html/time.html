@@ -4,46 +4,47 @@
 <head>
     <meta charset="UTF-8">
     <title>G.E.T. - Gerenciador de Escalação de Times</title>
-    <link href="../css/estilo.css" rel="stylesheet" type="text/css">
     <link href="../bootstrap-4.3.1/css/bootstrap.css" rel="stylesheet" type="text/css">
+    <link href="../css/estilo.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
     <header>
         <div id="logo"></div>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="collapse navbar-collapse" id="conteudoNavbarSuportado">
-            <ul class="nav nav-pills nav-fill">
-                <li class="nav-item">
-                    <a class="nav-link" href="medico.html">Situação médica</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="cartoes.html">Cartões</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="estatisticas.html">Estatísticas</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Escalação</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Cadastros
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="jogadores.html">Jogadores</a>
-                        <a class="dropdown-item" href="time.html">Time</a>
-                    </div>
-                </li>
-            </ul>
-        </div>
+            <div class="collapse navbar-collapse" id="conteudoNavbarSuportado">
+                <ul class="nav nav-pills nav-fill">
+                    <li class="nav-item">
+                        <a class="nav-link" href="medico.html">Situação médica</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="cartoes.html">Cartões</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="estatisticas.html">Estatísticas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Escalação</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                            Cadastros
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="jogadores.html">Jogadores</a>
+                            <a class="dropdown-item" href="time.html">Time</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
         </nav>
     </header>
     <div class="conteudo" style="padding-top: 30px;">
         <div class="row">
             <div class="col-xl-4 col-lg-4 col-md-4">
-                <h6 id="nomeDoTime"> </h6>
-                <input name="nomeDoTime" type="text" style="display:none;"/>
+                <div id="nomeDoTime"></div>
+                <input name="nomeDoTime" type="text" style="display:none;" />
                 <table class="table" style="border:1px solid red" id="listaTime">
                     <tr>
                         <th>Jogador</th>
@@ -61,17 +62,34 @@
                                 <!-- append options -->
                             </select>
                         </div>
-                        <div class="col-xl-8 col-lg-8 col-md-8" style="margin-bottom:25px">
-                            <br><h5>Dados do jogador</h5>
-                            
-                            <div id="dados">
-                                <span>Nome:</span><span id="dadosNome"></span><br>
-                                <span>Posição:</span><span id="dadosPosicao"></span><br>
-                                <span>Velocidade:</span><span id="dadosVelocidade"></span><br>
-                                <span>Fôlego:</span><span id="dadosFolego"></span><br>
-                                <span>Drible:</span><span id="dadosDrible"></span>
-                            </div>
-                        </div>                         
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-12 col-lg-12 col-md-12" style="margin-bottom:25px">
+                            <br>
+                            <h5>Dados do jogador</h5>
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td>Nome:</td>
+                                    <td id="dadosNome"></td>
+                                </tr>
+                                <tr>
+                                    <td>Posição:</td>
+                                    <td id="dadosPosicao"></td>
+                                </tr>
+                                <tr>
+                                    <td>Velocidade:</td>
+                                    <td id="dadosVelocidade"></td>
+                                </tr>
+                                <tr>
+                                    <td>Fôlego:</td>
+                                    <td id="dadosFolego"></td>
+                                </tr>
+                                <tr>
+                                    <td>Drible:</td>
+                                    <td id="dadosDrible"></td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
                     <div class="row">
                         &emsp;<button class="btn btn-primary" onclick="includeJogador()">Incluir Jogador</button>&emsp;
@@ -87,20 +105,25 @@
     <script src="../js/ajaxRequest.js" type='text/javascript'></script>
 
     <script>
-        window.onload = function() {
+        window.onload = function () {
             getTime();
             fillSelect();
         };
-        
+
+        $("#selectJogadores").on("change", function(){
+            var id = $("#selectJogadores").val();
+            getJogador(id);
+        })
+
         function fillSelect() {
             var xmlhttp = new FactoryXMLHttpRequest();
 
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4) {
                     var jsonObj = JSON.parse(xmlhttp.responseText);
-                    
-                    $(jsonObj.listaJogadores).each(function() {
-                        var content =  `<option value="${this.id}">${this.nome}</option>`;
+
+                    $(jsonObj.listaJogadores).each(function () {
+                        var content = `<option value="${this.id}">${this.nome}</option>`;
                         $("#selectJogadores").append(content);
                     });
                 }
@@ -111,18 +134,21 @@
                 xmlhttp.send();
             }
         }
-        
+
         function getTime() {
             var xmlhttp = new FactoryXMLHttpRequest();
 
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4) {
                     var jsonObj = JSON.parse(xmlhttp.responseText);
-                    
+
                     $("#nomeDoTime").html(jsonObj.nome);
-                    
-                    $(jsonObj.listaJogadores).each(function() {
-                        var content =  `<tr><td>${this.nome}</td><td>${this.posicao}</td></tr>`;
+
+                    $(jsonObj.listaJogadores).each(function () {
+                        var content = `<tr onclick="getJogador(${this.id})">
+                            <td style="display:none">${this.id}</td>
+                            <td>${this.nome}</td>
+                            <td>${this.posicao}</td></tr>`;
                         $("#listaTime").append(content);
                     });
                 }
@@ -133,23 +159,23 @@
                 xmlhttp.send();
             }
         }
-        
+
 
         function updateTime() {
             var xmlhttp = new FactoryXMLHttpRequest();
 
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4) {
-                   window.location.href = xmlhttp.responseText;
+                    window.location.href = xmlhttp.responseText;
                 }
             }
 
             if (xmlhttp) {
                 var nome = $("#").html();
-                
+
                 xmlhttp.open('post', 'http://localhost:' + porta + '/Time/update', true);
                 xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-                xmlhttp.send('nome='+nome+'&url='+window.location.href);
+                xmlhttp.send('nome=' + nome + '&url=' + window.location.href);
             }
         }
 
@@ -163,11 +189,15 @@
             }
 
             if (xmlhttp) {
-                var id = $("#selectJogadores").val();
+                var incluirId = $("#selectJogadores").val()
                 
-                xmlhttp.open('post', 'http://localhost:' + porta + '/Time/include', true);
-                xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-                xmlhttp.send('id'+id+'&url='+window.location.href);
+                if($("td:contains('" + incluirId + "')").length > 0) {
+                    alert("O time já contém o jogador informado.");
+                } else {
+                    xmlhttp.open('post', 'http://localhost:' + porta + '/Time/include', true);
+                    xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                    xmlhttp.send('id='+incluirId+'&url='+window.location.href);
+                }                
             }
         }
 
@@ -181,23 +211,43 @@
             }
 
             if (xmlhttp) {
-                var nome = $("#nome").val();
-                var pos = $("#posicao").val();
-                var fol = $("#folego").val();
-                var vel = $("#velocidade").val();
-                var dri = $("#drible").val();
+                var incluirId = $("#selectJogadores").val()
                 
-                xmlhttp.open('post', 'http://localhost:' + porta + '/Jogador/add', true);
-                xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-                xmlhttp.send('nome='+nome+'&posicao='+pos+'&folego='+fol+'&velocidade='+vel+'&drible='+dri+'&url='+window.location.href);
+                if($("td:contains('" + incluirId + "')").length > 0) {
+                    xmlhttp.open('post', 'http://localhost:' + porta + '/Time/include', true);
+                    xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                    xmlhttp.send('id='+incluirId+'&url='+window.location.href);                    
+                } else {
+                    alert("O time não contém o jogador informado.");
+                }                
             }
         }
-        
+
         function getJogador(id) {
-            if($("#id").html() == "") {
-                addJogador();
-            } else {
-                updateJogador();
+            var xmlhttp = new FactoryXMLHttpRequest();
+
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4) {
+                    var jsonObj = JSON.parse(xmlhttp.responseText);
+                    
+                    var selecionado = $("option[selected='selected']");
+                    if (selecionado !== undefined && selecionado.length > 0) {
+                        selecionado.removeAttr("selected");
+                    }                    
+                    
+                    $("option[value='" + jsonObj.id + "']").attr("selected", "selected");
+
+                    $("#dadosNome").html(jsonObj.nome);
+                    $("#dadosPosicao").html(jsonObj.posicao);
+                    $("#dadosFolego").html(jsonObj.folego);
+                    $("#dadosVelocidade").html(jsonObj.velocidade);
+                    $("#dadosDrible").html(jsonObj.drible);
+                }
+            }
+
+            if (xmlhttp) {
+                xmlhttp.open('get', 'http://localhost:' + porta + '/Time/get/' + id, true);
+                xmlhttp.send();
             }
         }
     </script>

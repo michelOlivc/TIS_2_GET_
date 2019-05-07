@@ -19,3 +19,11 @@ a.nav-link, div.dropdown-menu {
     margin-left: 135px;
 }
 
+/* REGRA DA TELA DE GERENCIAMENTO DE TIME */
+
+#nomeDoTime {
+    text-align: center; 
+    margin: 0 10px 10px 10px;
+    font-weight: bold;
+    font-size: 18px;
+}
