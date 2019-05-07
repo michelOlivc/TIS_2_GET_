@@ -5,6 +5,8 @@
 5;Diego;Zagueiro;3;2;1;
 6;Zidane;Volante;3;2;1;
 7;Messi;Volante;3;2;1;
+7;Bruno;Volante;3;1;1;
 8;Ganso;Atacante;2;2;1;
 9;Pato;Zagueiro;2;2;1;
-10;Tafarel;Goleiro;1;2;1;
+10;Marreco;Zagueiro;3;1;1;
+11;Tafarel;Goleiro;1;2;1;
