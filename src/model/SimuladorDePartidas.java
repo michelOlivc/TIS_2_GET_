@@ -2,6 +2,7 @@ package model;
 
 import java.util.Random;
 
+import dao.EstatisticaDAO;
 import dao.JogadorDAO;
 
 public class SimuladorDePartidas {
@@ -11,6 +12,7 @@ public class SimuladorDePartidas {
 		Estatistica [] estatisticas = new Estatistica [12];
 		
 		JogadorDAO player = new JogadorDAO();
+		EstatisticaDAO est = new EstatisticaDAO();
 		
 		estatisticas[0] = new Estatistica (player.get(1),0,0,0);
 		estatisticas[1] = new Estatistica (player.get(2),0,0,0);
@@ -32,12 +34,15 @@ public class SimuladorDePartidas {
 		for(int i=0;i<11;i++) {
 			
 			p = rand.nextInt(50);
-		    g = rand.nextInt(50);
-			a = rand.nextInt(50);
+		    g = rand.nextInt(10);
+			a = rand.nextInt(20);
 			
 			estatisticas[i].setPasseDeBola(p);
 			estatisticas[i].setGols(g);
 			estatisticas[i].setAssistencias(a);
+			
+			System.out.println(estatisticas[i].toJson().toString());
+			est.add(estatisticas[i]);
 		}
 	}
 	
