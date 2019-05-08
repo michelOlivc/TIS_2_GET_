@@ -86,7 +86,7 @@ public class TimeDAO {
 				if (i != t.getListaJogadores().size() - 1) {
 					buffer_saida.write(jogador.getId() + "-");
 				} else {
-					buffer_saida.write(jogador.getId());
+					buffer_saida.write(jogador.getId() + "");
 				}
 			}
 			

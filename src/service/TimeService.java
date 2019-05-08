@@ -22,7 +22,7 @@ public class TimeService {
 		
 		try {
 			Time time = timeDAO.get();
-			time.setNome(query.get("nomeTime"));
+			time.setNome(query.get("nome"));
 			
 			timeDAO.update(time);
 			

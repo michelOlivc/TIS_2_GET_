@@ -43,9 +43,9 @@
     <div class="conteudo" style="padding-top: 30px;">
         <div class="row">
             <div class="col-xl-4 col-lg-4 col-md-4">
-                <div id="nomeDoTime"></div>
-                <input name="nomeDoTime" type="text" style="display:none;" />
-                <table class="table" style="border:1px solid red" id="listaTime">
+                <div id="nomeDoTime" style="cursor:pointer;"></div>
+                <input name="nomeDoTime" type="text" style="display:none;margin-bottom:5px;" class="form-control"/>
+                <table class="table" id="listaTime">
                     <tr>
                         <th>Jogador</th>
                         <th>Posição</th>
@@ -115,6 +115,15 @@
             getJogador(id);
         })
 
+        $("#nomeDoTime").on("click", function() {
+            $("#nomeDoTime").css("display", "none");
+            $("input[name='nomeDoTime']").css("display", "block");
+        });
+
+        $("input[name='nomeDoTime']").on("change", function() {
+            updateTime();
+        });
+
         function fillSelect() {
             var xmlhttp = new FactoryXMLHttpRequest();
 
@@ -171,11 +180,11 @@
             }
 
             if (xmlhttp) {
-                var nome = $("#").html();
+                var nome = $("input[name='nomeDoTime']").val();
 
                 xmlhttp.open('post', 'http://localhost:' + porta + '/Time/update', true);
-                xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-                xmlhttp.send('nome=' + nome + '&url=' + window.location.href);
+                xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded; charset=UTF-8');
+                xmlhttp.send('nome='+nome+'&url='+window.location.href);
             }
         }
 
@@ -195,7 +204,7 @@
                     alert("O time já contém o jogador informado.");
                 } else {
                     xmlhttp.open('post', 'http://localhost:' + porta + '/Time/include', true);
-                    xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                    xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded; charset=UTF-8');
                     xmlhttp.send('id='+incluirId+'&url='+window.location.href);
                 }                
             }
@@ -214,8 +223,8 @@
                 var incluirId = $("#selectJogadores").val()
                 
                 if($("td:contains('" + incluirId + "')").length > 0) {
-                    xmlhttp.open('post', 'http://localhost:' + porta + '/Time/include', true);
-                    xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                    xmlhttp.open('post', 'http://localhost:' + porta + '/Time/remove', true);
+                    xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded; charset=UTF-8');
                     xmlhttp.send('id='+incluirId+'&url='+window.location.href);                    
                 } else {
                     alert("O time não contém o jogador informado.");

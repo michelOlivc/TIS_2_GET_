@@ -1,3 +1,4 @@
 11;Ronaldo;Atacante;5;3;1;
 18;Cafu;Volante;2;2;2;
 19;Roberto Carlos;Lateral;5;4;2;
+21;Lucio;Zagueiro;2;3;3;
