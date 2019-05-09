@@ -21,12 +21,13 @@
                     <!-- append jogadores -->
                 </table>
             </div>
-            <div class="col-xl-8 col-lg-8 col-md-8">
+            <div class="col-xl-7 col-lg-7 col-md-7">
                 <form action="" method="POST" id="form-jogador">
                     <div class="form-group row">
                         <div class="col-xl-12 col-lg-12 col-md-12">
                             <h5>Lista de jogadores</h5><br>
                             <select name="jogadores" id="selectJogadores" class="form-control">
+                                <option value="<null>"></option>
                                 <!-- append options -->
                             </select>
                         </div>
@@ -81,7 +82,12 @@
 
         $("#selectJogadores").on("change", function(){
             var id = $("#selectJogadores").val();
-            getJogador(id);
+            
+            if(id === "<null>") {
+                $("td[id*='dados']").html("");
+            } else {
+                getJogador(id);
+            }
         })
 
         $("#nomeDoTime").on("click", function() {

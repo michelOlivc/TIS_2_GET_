@@ -29,7 +29,7 @@ function includeHeader() {
                 <a class="nav-link" href="estatisticas.html">Estatísticas</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Escalação</a>
+                <a class="nav-link" href="escalacao.html">Escalação</a>
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

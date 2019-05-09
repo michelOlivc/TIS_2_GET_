@@ -20,7 +20,7 @@
                     <!-- append jogadores -->
                 </table>
             </div>
-            <div class="col-xl-8 col-lg-8 col-md-8">
+            <div class="col-xl-7 col-lg-7 col-md-7">
                 <form action="" method="POST" id="form-jogador">
                     <div class="form-group row">
                         <div class="col-xl-12 col-lg-12 col-md-12">
@@ -204,9 +204,10 @@
             var teste = true;
             var campos = new Array();
             
-            $("input").each(function() {
-                if(this.val() === "") {
-                    var nomeDoCampo = this.attr("name");
+            for(var i = 0; i < $("input").length; i++) {
+                var input = $("input").eq(i);
+                if(input.val() === "") {
+                    var nomeDoCampo = input.attr("name");
                     
                     if($("label[for='" + nomeDoCampo + "']") !== undefined) {
                         campos.push($("label[for='" + nomeDoCampo + "']").html());
@@ -214,7 +215,7 @@
 
                     teste = teste || false;
                 }
-            });
+            }
             
             if(teste === true) {
                 return "";

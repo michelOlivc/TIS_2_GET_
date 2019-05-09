@@ -35,6 +35,14 @@ a.nav-link, div.dropdown-menu {
     color: black !important;
 }
 
+.tituloTable {
+    text-align: center; 
+    margin: 0 10px 10px 10px;
+    font-weight: bold;
+    font-size: 18px;
+    cursor: default;
+}
+
 /* REGRA DA TELA DE GERENCIAMENTO DE TIME */
 
 #nomeDoTime {
