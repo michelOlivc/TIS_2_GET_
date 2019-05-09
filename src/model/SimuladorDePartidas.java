@@ -3,6 +3,7 @@ package model;
 import java.util.Random;
 
 import dao.EstatisticaDAO;
+import dao.FichaMedicaDAO;
 import dao.JogadorDAO;
 
 public class SimuladorDePartidas {
@@ -13,8 +14,7 @@ public class SimuladorDePartidas {
 		
 		JogadorDAO player = new JogadorDAO();
 		EstatisticaDAO est = new EstatisticaDAO();
-		
-		
+		FichaMedicaDAO ficha = new FichaMedicaDAO();
 		
 		for(int i=0;i<11;i++){
 			estatisticas[i] = new Estatistica (player.get(i+1),0,0,0);
@@ -22,8 +22,8 @@ public class SimuladorDePartidas {
 		
 		Random rand = new Random();
 		int p = rand.nextInt(50);
-		int g = rand.nextInt(50);
-		int a = rand.nextInt(50);
+		int g = rand.nextInt(20);
+		int a = rand.nextInt(10);
 		
 		for(int i=0;i<11;i++) {
 			
@@ -35,9 +35,16 @@ public class SimuladorDePartidas {
 			estatisticas[i].setGols(g);
 			estatisticas[i].setAssistencias(a);
 			
-			System.out.println(estatisticas[i].toJson().toString());
+			//get ficha medica por id=i
+			//update com dados aleatorios
+			//save to file
+			
+			//System.out.println(estatisticas[i].toJson().toString());
 			//est.add(estatisticas[i]);
 		}
+		
+		
+		
 	}
 	
 	
