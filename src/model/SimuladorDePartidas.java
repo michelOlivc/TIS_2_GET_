@@ -14,17 +14,11 @@ public class SimuladorDePartidas {
 		JogadorDAO player = new JogadorDAO();
 		EstatisticaDAO est = new EstatisticaDAO();
 		
-		estatisticas[0] = new Estatistica (player.get(1),0,0,0);
-		estatisticas[1] = new Estatistica (player.get(2),0,0,0);
-		estatisticas[2] = new Estatistica (player.get(3),0,0,0);
-		estatisticas[3] = new Estatistica (player.get(4),0,0,0);
-		estatisticas[4] = new Estatistica (player.get(5),0,0,0);
-		estatisticas[5] = new Estatistica (player.get(6),0,0,0);
-		estatisticas[6] = new Estatistica (player.get(7),0,0,0);
-		estatisticas[7] = new Estatistica (player.get(8),0,0,0);
-		estatisticas[8] = new Estatistica (player.get(9),0,0,0);
-		estatisticas[9] = new Estatistica (player.get(10),0,0,0);
-		estatisticas[10] = new Estatistica (player.get(11),0,0,0);
+		
+		
+		for(int i=0;i<11;i++){
+			estatisticas[i] = new Estatistica (player.get(i+1),0,0,0);
+		}
 		
 		Random rand = new Random();
 		int p = rand.nextInt(50);
@@ -42,7 +36,7 @@ public class SimuladorDePartidas {
 			estatisticas[i].setAssistencias(a);
 			
 			System.out.println(estatisticas[i].toJson().toString());
-			est.add(estatisticas[i]);
+			//est.add(estatisticas[i]);
 		}
 	}
 	
