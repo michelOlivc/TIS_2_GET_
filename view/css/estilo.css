@@ -1,7 +1,6 @@
 /*REGRAS GERAIS DAS PÁGINAS*/
 
 .conteudo {
-    background-color: lightslategray;
     padding: 15px;
     min-height: 600px;
 }
@@ -19,6 +18,23 @@ a.nav-link, div.dropdown-menu {
     margin-left: 135px;
 }
 
+.navbar {
+    background-color: #006400 !important;    
+}
+
+.navbar a {
+    color: white !important;
+}
+
+.btn {
+    background-color: #006400 !important;
+    border-color: #006400 !important;
+}
+
+.dropdown-menu > a {
+    color: black !important;
+}
+
 /* REGRA DA TELA DE GERENCIAMENTO DE TIME */
 
 #nomeDoTime {
@@ -27,4 +43,16 @@ a.nav-link, div.dropdown-menu {
     font-weight: bold;
     font-size: 18px;
     cursor: default;
+}
+
+/* REGRA DA TELA DE CRUD DE JOGADORES */
+
+#cabecalhoLista {
+    text-align: center; 
+    font-weight: bold;
+    font-size: 18px;
+}
+
+span#id {
+    display: none;
 }
