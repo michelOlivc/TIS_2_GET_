@@ -1,3 +1,5 @@
+var porta = '8080';
+
 function FactoryXMLHttpRequest() {
 
     if (window.XMLHttpRequest) {

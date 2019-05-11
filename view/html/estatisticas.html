@@ -4,59 +4,21 @@
 <head>
     <meta charset="UTF-8">
     <title>G.E.T. - Gerenciador de Escalação de Times</title>
-    <link href="../css/estilo.css" rel="stylesheet" type="text/css">
-    <link href="../bootstrap-4.3.1/css/bootstrap.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
-    <header>
-        <div id="logo"></div>
-        <ul class="nav nav-pills nav-fill">
-            <li class="nav-item">
-                <a class="nav-link" href="medico.html">Situação médica</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="cartoes.html">Cartões</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="estatisticas.html">Estatísticas</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Escalação</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="jogadores.html">Jogadores</a>
-            </li>
-        </ul>
-    </header>
+    <header></header>
     <div class="conteudo" style="padding-top: 30px;">
         <div class="row">
             <div class="col-xl-4 col-lg-4 col-md-4">
-                <table class="table" style="border:1px solid red">
+                <table class="table">
                     <tr>
                         <th>Jogador</th><th>Posição</th>
                     </tr>
-                    <tr>
-                        <td>Marcos</td><td>Goleiro</td>
-                    </tr>
-                    <tr>
-                        <td>Cafú</td><td>Lateral-direito</td>
-                    </tr>
-                    <tr>
-                        <td>Lúcio</td><td>Zagueiro</td>
-                    </tr>
-                    <tr>
-                        <td>Roque Júnior</td><td>Zagueiro</td>
-                    </tr>    
-                    <tr>
-                        <td>Edmílson</td><td>Volante e Zagueiro</td>
-                    </tr>
-                    <tr>
-                        <td>Roberto Carlos</td><td>Lateral-esquerdo</td>
-                    </tr>
+                    <!-- append jogadores -->
                 </table>
             </div>
-            <div class="col-xl-8 col-lg-8 col-md-8">
+            <div class="col-xl-7 col-lg-7 col-md-7">
                 <form action="">
                     <div class="form-group row">
                         <div class="col-xl-8 col-lg-8 col-md-8">
@@ -105,8 +67,10 @@
         </div>
     </div>
     <footer></footer>
-    <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js' type='text/javascript'></script>
-    <script src="../bootstrap-4.3.1/js/bootstrap.js"></script>
+    <script src='../js/jquery.js' type='text/javascript'></script>
+    <script src="../bootstrap-4.3.1/js/bootstrap.js" type='text/javascript'></script>
+    <script src="../js/ajaxRequest.js" type='text/javascript'></script>
+    <script src="../js/includes.js" type="text/javascript"></script>
 </body>
 
 </html>

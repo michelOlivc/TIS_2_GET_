@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -17,7 +18,7 @@ public class Time implements JsonFormatter {
 	private List<Jogador> listaJogadores;
 	
 	public Time() {
-		
+		this.listaJogadores = new ArrayList<Jogador>();
 	}
 	
 	public Time(String nome) {

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <title>G.E.T. - Gerenciador de Escalação de Times</title>
+</head>
+
+<body>
+    <header></header>
+    <div class="conteudo" style="padding-top: 30px;">
+        <div class="row">
+            <div class="col-xl-4 col-lg-4 col-md-4">
+                <div id="nomeDoTime" style="cursor:pointer;"></div>
+                <input name="nomeDoTime" type="text" style="display:none;margin-bottom:5px;" class="form-control"/>
+                <table class="table" id="listaTime">
+                    <tr>
+                        <th>Jogador</th>
+                        <th>Posição</th>
+                    </tr>
+                    <!-- append jogadores -->
+                </table>
+            </div>
+            <div class="col-xl-7 col-lg-7 col-md-7">
+                <form action="" method="POST" id="form-jogador">
+                    <div class="form-group row">
+                        <div class="col-xl-12 col-lg-12 col-md-12">
+                            <h5>Lista de jogadores</h5><br>
+                            <select name="jogadores" id="selectJogadores" class="form-control">
+                                <option value="<null>"></option>
+                                <!-- append options -->
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-12 col-lg-12 col-md-12" style="margin-bottom:25px">
+                            <br>
+                            <h5>Dados do jogador</h5>
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td>Nome:</td>
+                                    <td id="dadosNome"></td>
+                                </tr>
+                                <tr>
+                                    <td>Posição:</td>
+                                    <td id="dadosPosicao"></td>
+                                </tr>
+                                <tr>
+                                    <td>Velocidade:</td>
+                                    <td id="dadosVelocidade"></td>
+                                </tr>
+                                <tr>
+                                    <td>Fôlego:</td>
+                                    <td id="dadosFolego"></td>
+                                </tr>
+                                <tr>
+                                    <td>Drible:</td>
+                                    <td id="dadosDrible"></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        &emsp;<button class="btn btn-primary" onclick="includeJogador()">Incluir Jogador</button>&emsp;
+                        &emsp;<button class="btn btn-primary" onclick="removeJogador()">Remover Jogador</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <footer></footer>
+    <script src='../js/jquery.js' type='text/javascript'></script>
+    <script src="../bootstrap-4.3.1/js/bootstrap.js" type='text/javascript'></script>
+    <script src="../js/ajaxRequest.js" type='text/javascript'></script>
+    <script src="../js/includes.js" type="text/javascript"></script>
+
+    <script>
+        window.onload = function () {
+            getTime();
+            fillSelect();
+        };
+
+        $("#selectJogadores").on("change", function(){
+            var id = $("#selectJogadores").val();
+            
+            if(id === "<null>") {
+                $("td[id*='dados']").html("");
+            } else {
+                getJogador(id);
+            }
+        })
+
+        $("#nomeDoTime").on("click", function() {
+            $("#nomeDoTime").css("display", "none");
+            $("input[name='nomeDoTime']").css("display", "block");
+        });
+
+        $("input[name='nomeDoTime']").on("change", function() {
+            updateTime();
+        });
+
+        function fillSelect() {
+            var xmlhttp = new FactoryXMLHttpRequest();
+
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4) {
+                    var jsonObj = JSON.parse(xmlhttp.responseText);
+
+                    $(jsonObj.listaJogadores).each(function () {
+                        var content = `<option value="${this.id}">${this.nome}</option>`;
+                        $("#selectJogadores").append(content);
+                    });
+                }
+            }
+
+            if (xmlhttp) {
+                xmlhttp.open('get', 'http://localhost:' + porta + '/Time/list');
+                xmlhttp.send();
+            }
+        }
+
+        function getTime() {
+            var xmlhttp = new FactoryXMLHttpRequest();
+
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4) {
+                    var jsonObj = JSON.parse(xmlhttp.responseText);
+
+                    $("#nomeDoTime").html(jsonObj.nome);
+
+                    $(jsonObj.listaJogadores).each(function () {
+                        var content = `<tr onclick="getJogador(${this.id})">
+                            <td style="display:none">${this.id}</td>
+                            <td>${this.nome}</td>
+                            <td>${this.posicao}</td></tr>`;
+                        $("#listaTime").append(content);
+                    });
+                }
+            }
+
+            if (xmlhttp) {
+                xmlhttp.open('get', 'http://localhost:' + porta + '/Time/load');
+                xmlhttp.send();
+            }
+        }
+
+
+        function updateTime() {
+            var xmlhttp = new FactoryXMLHttpRequest();
+
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4) {
+                    window.location.href = xmlhttp.responseText;
+                }
+            }
+
+            if (xmlhttp) {
+                var nome = $("input[name='nomeDoTime']").val();
+
+                xmlhttp.open('post', 'http://localhost:' + porta + '/Time/update', true);
+                xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded; charset=UTF-8');
+                xmlhttp.send('nome='+nome+'&url='+window.location.href);
+            }
+        }
+
+        function includeJogador() {
+            var xmlhttp = new FactoryXMLHttpRequest();
+
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4) {
+                    window.location.href = xmlhttp.responseText;
+                }
+            }
+
+            if (xmlhttp) {
+                var incluirId = $("#selectJogadores").val()
+                
+                if($("td:contains('" + incluirId + "')").length > 0) {
+                    alert("O time já contém o jogador informado.");
+                } else {
+                    xmlhttp.open('post', 'http://localhost:' + porta + '/Time/include', true);
+                    xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded; charset=UTF-8');
+                    xmlhttp.send('id='+incluirId+'&url='+window.location.href);
+                }                
+            }
+        }
+
+        function removeJogador() {
+            var xmlhttp = new FactoryXMLHttpRequest();
+
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4) {
+                    window.location.href = xmlhttp.responseText;
+                }
+            }
+
+            if (xmlhttp) {
+                var incluirId = $("#selectJogadores").val()
+                
+                if($("td:contains('" + incluirId + "')").length > 0) {
+                    xmlhttp.open('post', 'http://localhost:' + porta + '/Time/remove', true);
+                    xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded; charset=UTF-8');
+                    xmlhttp.send('id='+incluirId+'&url='+window.location.href);                    
+                } else {
+                    alert("O time não contém o jogador informado.");
+                }                
+            }
+        }
+
+        function getJogador(id) {
+            var xmlhttp = new FactoryXMLHttpRequest();
+
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4) {
+                    var jsonObj = JSON.parse(xmlhttp.responseText);
+                    
+                    var selecionado = $("option[selected='selected']");
+                    if (selecionado !== undefined && selecionado.length > 0) {
+                        selecionado.removeAttr("selected");
+                    }                    
+                    
+                    $("option[value='" + jsonObj.id + "']").attr("selected", "selected");
+
+                    $("#dadosNome").html(jsonObj.nome);
+                    $("#dadosPosicao").html(jsonObj.posicao);
+                    $("#dadosFolego").html(jsonObj.folego);
+                    $("#dadosVelocidade").html(jsonObj.velocidade);
+                    $("#dadosDrible").html(jsonObj.drible);
+                }
+            }
+
+            if (xmlhttp) {
+                xmlhttp.open('get', 'http://localhost:' + porta + '/Time/get/' + id, true);
+                xmlhttp.send();
+            }
+        }
+    </script>
+</body>
+
+</html>

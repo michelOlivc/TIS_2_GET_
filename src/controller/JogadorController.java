@@ -13,40 +13,44 @@ public class JogadorController implements Controller {
 	public void rotearRequisicao(Request request, Response response) {
 		try {
 			String path = request.getPath().getPath();
+			String acao = path.split("/")[2];
 			String method = request.getMethod();
 			String message;
+			String url;
 			
 			if("GET".equals(method)) {
-				if(path.split("/").length == 3) {
-					Integer id = Integer.parseInt(path.split("/")[2]);
+				if("get".equals(acao)) {
+					Integer id = Integer.parseInt(path.split("/")[3]);
 					message = service.consultarJogador(id, request);
 					
-				} else {
+					if(message != null)
+						this.enviaResposta(Status.OK, response, message);
+					else
+						this.naoEncontrado(response, path);
+					
+				} else if("list".equals(acao)) {
 					message = service.listarJogadores(request);
-				}
-				
-				this.enviaResposta(Status.OK, response, message);
+					
+					if(message != null)
+						this.enviaResposta(Status.OK, response, message);
+					else
+						this.naoEncontrado(response, path);
+					
+				} 
 			
 			} else if("POST".equals(method)) {
-				message = service.adicionarJogador(request);
-				this.enviaResposta(Status.CREATED, response, message);
+				if("add".equals(acao)) {
+					url = service.adicionarJogador(request);
+					this.redireciona(Status.CREATED, response, url);
 				
-			} else if("PUT".equals(method)) {
-				message = service.atualizarJogador(request);
-				if (message == null) {
-					this.naoEncontrado(response, path);
-				} else {
-					this.enviaResposta(Status.OK, response, null);
+				} else if("update".equals(acao)) {
+					url = service.atualizarJogador(request);
+					this.redireciona(Status.OK, response, url);
+				
+				} else if("delete".equals(acao)) {
+					url = service.removerJogador(request);
+					this.redireciona(Status.OK, response, url);
 				}
-				
-			} else if("DELETE".equals(method)) {
-				message = service.removerJogador(request);
-				if (message == null) {
-					this.naoEncontrado(response, path);
-				} else {
-					this.enviaResposta(Status.NO_CONTENT, response, null);
-				}
-				
 			} else {
 				this.naoEncontrado(response, path);
 			}
