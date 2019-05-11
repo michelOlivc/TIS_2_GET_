@@ -1,4 +1,5 @@
-11;Ronaldo;Atacante;5;3;1;
-18;Cafu;Volante;2;2;2;
-19;Roberto Carlos;Lateral;5;4;2;
-23;Michel;Gandula;1;1;1;
+19;Michel;Zagueiro;2;2;2;
+26;Michel;Gandula;5;1;1;
+27;Sunimar;Goleiro;4;2;1;
+28;Ronaldo;Atacante;3;2;1;
+29;Ronaldinho Gaúcho;Goleiro;3;2;1;

@@ -35,7 +35,7 @@ public class HttpServer implements Container {
 		// "Address already in use: bind error", 
 		// tente mudar a porta.
 		
-		int porta = 8080;
+		int porta = 8888;
 
 		// Configura uma conexão soquete para o servidor HTTP.
 		Container container = new HttpServer();

@@ -1,12 +1,13 @@
 package model;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Campeonato {
 	private String nome;
 	private int jogos;
 	private int cont;
 	
-	 List<Partida> partidas;
+	private List<Partida> partidas;
 
 	
 	
@@ -16,49 +17,50 @@ public class Campeonato {
 		this.nome = nome;
 		this.jogos = jogos;
 		this.cont=0;
-		this.partidas=new ArrayList <Partida>();
+		this.partidas = new ArrayList <Partida>();
 
 	}
-
-
-
+	
 	public String getNome() {
 		return nome;
 	}
-
-
-
-	public int getJogos() {
-		return jogos;
-	}
-
-
 
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
 
-
+	public int getJogos() {
+		return jogos;
+	}
 
 	public void setJogos(int jogos) {
 		this.jogos = jogos;
 	}
 
+	public int getCont() {
+		return cont;
+	}
 
+	public void setCont(int cont) {
+		this.cont = cont;
+	}
 
-	public ArrayList<Partida> getTodasPartidas() {
+	public List<Partida> getPartidas() {
 		return partidas;
 	}
-	public Partida getPartida(int jogos) {
-		return partidas.get(jogos);
+
+	public void setPartidas(List<Partida> partidas) {
+		this.partidas = partidas;
 	}
+
 	public void setUmaPartidas(List<Estatistica> partida,int id) {
 		this.partidas.get(id).estatisticasJogador = partida ;
 	}
+	
 	public void inserirPartida(Partida partida){
-		if(cont<jogos){
-		this.partidas.add(partida);
-		this.cont ++;
-	}
+		if(cont<jogos) {
+			this.partidas.add(partida);
+			this.cont ++;
+		}
 	}
 }
