@@ -1,7 +1,7 @@
 package model.enums;
 
 public enum NivelLesao {
-
+	LIBERADO(0),
 	BAIXA(30), 
 	MEDIA(60), 
 	GRAVE(90);
@@ -23,6 +23,8 @@ private Integer valor;
 	
 	public static NivelLesao findByValor(Integer valor) {
 		switch(valor) {
+			case 0:
+				return NivelLesao.LIBERADO;
 			case 30:
 				return NivelLesao.BAIXA;
 			case 60:

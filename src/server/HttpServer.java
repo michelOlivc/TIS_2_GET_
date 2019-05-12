@@ -13,11 +13,13 @@ import org.simpleframework.transport.connect.Connection;
 import org.simpleframework.transport.connect.SocketConnection;
 
 import controller.JogadorController;
+import controller.SituacaoMedicaController;
 import controller.TimeController;
 
 public class HttpServer implements Container {
 	private TimeController timeController = new TimeController();
 	private JogadorController jogadorController = new JogadorController();
+	private SituacaoMedicaController situacaoController = new SituacaoMedicaController();
 	
 	@Override
 	public void handle(Request request, Response response) {
@@ -27,6 +29,8 @@ public class HttpServer implements Container {
 			timeController.rotearRequisicao(request, response);
 		} else if(path.startsWith("/Jogador")) {
 			jogadorController.rotearRequisicao(request, response);
+		} else if(path.startsWith("/SituacaoMedica")) {
+			situacaoController.rotearRequisicao(request, response);
 		}
 	}
 	

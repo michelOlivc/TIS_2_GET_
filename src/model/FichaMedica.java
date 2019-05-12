@@ -1,7 +1,7 @@
 package model;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoField;
+import java.time.format.DateTimeFormatter;
 
 import org.json.JSONObject;
 
@@ -82,11 +82,13 @@ public class FichaMedica implements JsonFormatter {
 	
 	@Override
 	public JSONObject toJson() {
+		DateTimeFormatter pattern = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		
 		JSONObject obj = new JSONObject();
 		obj.put("id", this.id);
-		obj.put("Jogador", this.jogador.toJson());
-		obj.put("Nivel da lesao", this.nivelDaLesao.getValor());
-		obj.put("Data que machucou", this.dataEntrada.toString());
+		obj.put("jogador", this.jogador.toJson());
+		obj.put("nivelDaLesao", this.nivelDaLesao.getValor());
+		obj.put("dataEntrada", pattern.format(this.dataEntrada));
 		
 		return obj;
 	}
