@@ -24,15 +24,21 @@
                     <div class="form-group row">
                         <div class="col-xl-12 col-lg-12 col-md-12">
                             <label for="nome">Nome do jogador</label><br>
-                            <input name="nome" type="text" id="nome" class="form-control" /><br>
+                            <input name="nome" type="text" id="nome" class="form-control" disabled="disabled"/><br>
                         </div>
                         <div class="col-xl-8 col-lg-8 col-md-8">
                             <label for="nivelDaLesao">Grau da lesão</label><br>
-                            <input name="nivelDaLesao" type="text" id="nivelDaLesao" class="form-control" /><br>
+                            <select name="nivelDaLesao" id="nivelDaLesao" class="form-control" disabled="disabled">
+                                <option value="<null>"></option>
+                                <option value="0">Liberado</option>
+                                <option value="30">Lesão Leve</option>
+                                <option value="60">Lesão Média</option>
+                                <option value="90">Lesão Grave</option>
+                            </select>
                         </div>
-                        <div class="col-xl-4 col-lg-4 col-md-4">
+                        <div class="col-xl-4 col-lg-4 col-md-4 campo-afast">
                             <label for="afastamento">Dias até a liberação</label><br>
-                            <input name="afastamento" type="text" id="afastamento" class="form-control" /><br>
+                            <input name="afastamento" type="text" id="afastamento" class="form-control" disabled="disabled"/><br>
                         </div>
                     </div>
                 </form>
@@ -44,6 +50,67 @@
     <script src="../bootstrap-4.3.1/js/bootstrap.js" type='text/javascript'></script>
     <script src="../js/ajaxRequest.js" type='text/javascript'></script>
     <script src="../js/includes.js" type="text/javascript"></script>
+    <script>
+        window.onload = function() {
+            listJogadores();
+        };
+
+        function listJogadores() {
+            var xmlhttp = new FactoryXMLHttpRequest();
+
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4) {
+                    var resposta = JSON.parse(xmlhttp.responseText);
+                    var listaJogadores = resposta.listaJogadores;
+
+                    for(var i = 0; i < listaJogadores.length; i++) {
+                        var content = `<tr onclick="getFichaMedica(${listaJogadores[i].id})">
+                                        <td>${listaJogadores[i].nome}</td>
+                                        <td>${listaJogadores[i].posicao}</td>
+                                    </tr>`;
+                        $("table").append(content);
+                    }
+                }
+            }
+
+            if (xmlhttp) {
+                xmlhttp.open('get', 'http://localhost:' + porta + '/SituacaoMedica/list', true);
+                xmlhttp.send();
+            }
+        }
+
+        function getFichaMedica(idJogador) {
+            var xmlhttp = new FactoryXMLHttpRequest();
+
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4) {
+                    var jsonObj = JSON.parse(xmlhttp.responseText);
+
+                    var selecionado = $("option[selected='selected']");
+                    if (selecionado !== undefined && selecionado.length > 0) {
+                        selecionado.removeAttr("selected");
+                    }                    
+                    
+                    $("option[value='" + jsonObj.nivelDaLesao + "']").attr("selected", "selected");
+
+                    if(jsonObj.nivelDaLesao > 0) {
+                        $(".campo-afast").css("visibility", "visible");
+                    } else {
+                        $(".campo-afast").css("visibility", "hidden");
+                    }
+                    
+                    $("#nome").val(jsonObj.jogador.nome);
+                    // O campo abaixo depende da correção do método toJson() da classe FichaMedica
+                    // $("#afastamento").val(jsonObj);                    
+                }
+            }
+
+            if (xmlhttp) {
+                xmlhttp.open('get', 'http://localhost:' + porta + '/SituacaoMedica/get/' + idJogador, true);
+                xmlhttp.send();
+            }
+        }
+    </script>
 </body>
 
 </html>

@@ -64,3 +64,8 @@ a.nav-link, div.dropdown-menu {
 span#id {
     display: none;
 }
+
+/* REGRA DA TELA DE SITUAÇÃO MÉDICA */
+.campo-afast {
+    visibility: hidden;
+}
