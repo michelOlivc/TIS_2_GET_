@@ -223,9 +223,9 @@
 
                     $("#dadosNome").html(jsonObj.nome);
                     $("#dadosPosicao").html(jsonObj.posicao);
-                    $("#dadosFolego").html(jsonObj.folego);
-                    $("#dadosVelocidade").html(jsonObj.velocidade);
-                    $("#dadosDrible").html(jsonObj.drible);
+                    $("#dadosFolego").html(numberToSymbol(jsonObj.folego, "&#9733;"));
+                    $("#dadosVelocidade").html(numberToSymbol(jsonObj.velocidade, "&#9733;"));
+                    $("#dadosDrible").html(numberToSymbol(jsonObj.drible, "&#9733;"));
                 }
             }
 
@@ -233,6 +233,15 @@
                 xmlhttp.open('get', 'http://localhost:' + porta + '/Time/get/' + id, true);
                 xmlhttp.send();
             }
+        }
+
+        function numberToSymbol(num, symbol) {
+            var text = "";
+            for (i = 0; i < num; i++) {
+                text += symbol + " ";
+            }
+            
+            return text;
         }
     </script>
 </body>

@@ -37,6 +37,7 @@ function includeHeader() {
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <a class="dropdown-item" href="jogadores.html">Jogadores</a>
+                    <a class="dropdown-item" href="campeonato.html">Campeonatos</a>
                     <a class="dropdown-item" href="time.html">Time</a>
                 </div>
             </li>

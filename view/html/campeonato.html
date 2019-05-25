@@ -6,16 +6,16 @@
     <title>G.E.T. - Gerenciador de Escalação de Times</title>    
 </head>
 
-<body onload="listJogadores()">
+<body onload="listCampeonatos()">
     <header></header>
     <div class="conteudo" style="padding-top: 30px;">
         <div class="row">
             <div class="col-xl-4 col-lg-4 col-md-4">
-                <h6 id="cabecalhoLista">Lista de jogadores</h6>
+                <h6 id="cabecalhoLista">Lista de campeonatos</h6>
                 <table class="table">
                     <tr>
-                        <th>Jogador</th>
-                        <th>Posição</th>
+                        <th>Campeonato</th>
+                        <th>Número de rodadas</th>
                     </tr>
                     <!-- append jogadores -->
                 </table>
@@ -27,29 +27,17 @@
                             <span id="id"></span>
                         </div>
                         <div class="col-xl-8 col-lg-8 col-md-8">
-                            <label for="nome">Nome do jogador</label><br>
+                            <label for="nome">Nome do campeonato</label><br>
                             <input name="nome" type="text" id="nome" class="form-control" /><br>
                         </div>
                         <div class="col-xl-4 col-lg-4 col-md-4">
-                            <label for="posicao">Posição</label><br>
-                            <input name="posicao" type="text" id="posicao" class="form-control" /><br>
-                        </div>
-                        <div class="col-xl-4 col-lg-4 col-md-4">
-                            <label for="folego">Fôlego</label><br>
-                            <input name="folego" type="text" id="folego" class="form-control" /><br>
-                        </div>
-                        <div class="col-xl-4 col-lg-4 col-md-4">
-                            <label for="velocidade">Velocidade</label><br>
-                            <input name="velocidade" type="text" id="velocidade" class="form-control" /><br>
-                        </div>
-                        <div class="col-xl-4 col-lg-4 col-md-4">
-                            <label for="drible">Drible</label><br>
-                            <input name="drible" type="text" id="drible" class="form-control" /><br>
+                            <label for="rodadas">Número de rodadas</label><br>
+                            <input name="rodadas" type="text" id="rodadas" class="form-control" /><br>
                         </div>
                     </div>
                     <div class="row">
-                        &emsp;<button class="btn btn-primary" onclick="putJogador()">Salvar Jogador</button>&emsp;
-                        &emsp;<button class="btn btn-primary" onclick="deleteJogador()">Excluir Jogador</button>&emsp;
+                        &emsp;<button class="btn btn-primary" onclick="putCampeonato()">Salvar Campeonato</button>&emsp;
+                        &emsp;<button class="btn btn-primary" onclick="deleteCampeonato()">Excluir Campeonato</button>&emsp;
                         &emsp;<button class="btn btn-primary" onclick="clearForm()">Limpar</button>
                     </div>
                 </form>
@@ -62,7 +50,7 @@
     <script src="../js/ajaxRequest.js" type='text/javascript'></script>
     <script src="../js/includes.js" type="text/javascript"></script>
     <script>
-        function getJogador(id) {
+        function getCampeonato(id) {
             var xmlhttp = new FactoryXMLHttpRequest();
 
             xmlhttp.onreadystatechange = function () {
@@ -71,31 +59,28 @@
 
                     $("#id").html(jsonObj.id);
                     $("#nome").val(jsonObj.nome);
-                    $("#posicao").val(jsonObj.posicao);
-                    $("#folego").val(jsonObj.folego);
-                    $("#velocidade").val(jsonObj.velocidade);
-                    $("#drible").val(jsonObj.drible);
+                    $("#rodadas").val(jsonObj.jogos);
                 }
             }
 
             if (xmlhttp) {
-                xmlhttp.open('get', 'http://localhost:' + porta + '/Jogador/get/' + id, true);
+                xmlhttp.open('get', 'http://localhost:' + porta + '/Campeonato/get/' + id, true);
                 xmlhttp.send();
             }
         }
 
-        function listJogadores() {
+        function listCampeonatos() {
             var xmlhttp = new FactoryXMLHttpRequest();
 
-            xmlhttp.onreadystatechange = function () {
+            xmlhttp.onreadystatechange = function() {
                 if (xmlhttp.readyState == 4) {
                     var resposta = JSON.parse(xmlhttp.responseText);
-                    var listaJogadores = resposta.listaJogadores;
+                    var lista = resposta.listaCampeonatos;
 
-                    for(var i = 0; i < listaJogadores.length; i++) {
-                        var content = `<tr onclick="getJogador(${listaJogadores[i].id})">
-                                        <td>${listaJogadores[i].nome}</td>
-                                        <td>${listaJogadores[i].posicao}</td>
+                    for(var i = 0; i < lista.length; i++) {
+                        var content = `<tr onclick="getCampeonato(${lista[i].id})">
+                                        <td>${lista[i].nome}</td>
+                                        <td>${lista[i].jogos}</td>
                                     </tr>`;
                         $("table").append(content);
                     }
@@ -103,12 +88,12 @@
             }
 
             if (xmlhttp) {
-                xmlhttp.open('get', 'http://localhost:' + porta + '/Jogador/list', true);
+                xmlhttp.open('get', 'http://localhost:' + porta + '/Campeonato/list', true);
                 xmlhttp.send();
             }
         }
 
-        function addJogador() {
+        function addCampeonato() {
             var xmlhttp = new FactoryXMLHttpRequest();
 
             xmlhttp.onreadystatechange = function () {
@@ -119,18 +104,15 @@
 
             if (xmlhttp) {
                 var nome = $("#nome").val();
-                var pos = $("#posicao").val();
-                var fol = $("#folego").val();
-                var vel = $("#velocidade").val();
-                var dri = $("#drible").val();
+                var pos = $("#rodadas").val();
                 
-                xmlhttp.open('post', 'http://localhost:' + porta + '/Jogador/add', true);
+                xmlhttp.open('post', 'http://localhost:' + porta + '/Campeonato/add', true);
                 xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-                xmlhttp.send('nome='+nome+'&posicao='+pos+'&folego='+fol+'&velocidade='+vel+'&drible='+dri+'&url='+window.location.href);
+                xmlhttp.send('nome='+nome+'&jogos='+pos+'&url='+window.location.href);
             }
         }
 
-        function updateJogador() {
+        function updateCampeonato() {
             var xmlhttp = new FactoryXMLHttpRequest();
 
             xmlhttp.onreadystatechange = function () {
@@ -142,39 +124,35 @@
             if (xmlhttp) {
                 var id = $("#id").html();
                 var nome = $("#nome").val();
-                var pos = $("#posicao").val();
-                var fol = $("#folego").val();
-                var vel = $("#velocidade").val();
-                var dri = $("#drible").val();
+                var rodadas = $("#rodadas").val();
                 
-                xmlhttp.open('post', 'http://localhost:' + porta + '/Jogador/update', true);
+                xmlhttp.open('post', 'http://localhost:' + porta + '/Campeonato/update', true);
                 xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-                xmlhttp.send('id='+id+'&nome='+nome+'&posicao='+pos+'&folego='+fol+'&velocidade='+vel+'&drible='+dri+'&url='+window.location.href);
+                xmlhttp.send('id='+id+'&nome='+nome+'&jogos='+rodadas+'&url='+window.location.href);
             }
         }
         
-        function putJogador() {
+        function putCampeonato() {
             var campos = validarCamposVazios();
 
             if(campos === "") {
                 if($("#id").html() == "") {
-                    addJogador();
+                    addCampeonato();
                 } else {
-                    updateJogador();
+                    updateCampeonato();
                 }
             } else {
                 var msg = "";
                 
-                for(i = 0; campos.length; i++) {
+                for(i = 0; i < campos.length; i++) {
                     msg += 'O campo ' + campos[i] + ' é obrigatório.\n';
                 }
                 
                 alert(msg);
-            }
-            
+            }            
         }
 
-        function deleteJogador() {
+        function deleteCampeonato() {
             var xmlhttp = new FactoryXMLHttpRequest();
 
             xmlhttp.onreadystatechange = function () {
@@ -186,7 +164,7 @@
             if (xmlhttp) {
                 var id = $("#id").html();
                 
-                xmlhttp.open('post', 'http://localhost:' + porta + '/Jogador/delete', true);
+                xmlhttp.open('post', 'http://localhost:' + porta + '/Campeonato/delete', true);
                 xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
                 xmlhttp.send('id='+id+'&url='+window.location.href);
             }
@@ -195,10 +173,7 @@
         function clearForm() {
             $("#id").html("");
             $("#nome").val("");
-            $("#posicao").val("");
-            $("#folego").val("");
-            $("#velocidade").val("");
-            $("#drible").val("");
+            $("#rodadas").val("");
         }
 
         function validarCamposVazios() {

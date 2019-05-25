@@ -11,6 +11,7 @@
     <div class="conteudo" style="padding-top: 30px;">
         <div class="row">
             <div class="col-xl-4 col-lg-4 col-md-4">
+                <h6 id="cabecalhoLista">Time</h6>
                 <table class="table">
                     <tr>
                         <th>Jogador</th>
@@ -22,21 +23,28 @@
             <div class="col-xl-7 col-lg-7 col-md-7">
                 <form action="">
                     <div class="form-group row">
-                        <div class="col-xl-12 col-lg-12 col-md-12">
+                        <div style="display:none;" id="idJogador"></div>
+                        <div class="col-xl-7 col-lg-7 col-md-7">
                             <label for="nome">Nome do jogador</label><br>
-                            <input name="nome" type="text" id="nome" class="form-control" /><br>
+                            <input name="nome" type="text" id="nome" class="form-control" disabled="disabled"/><br>
                         </div>
-                        <div class="col-xl-6 col-lg-6 col-md-6">
+                        <div class="col-xl-5 col-lg-5 col-md-5">
+                            <label for="campeonato">Campeonato</label><br>
+                            <select name="campeonato" id="campeonato" class="form-control" onchange="getContador($('#idJogador').html())">
+                                <!-- append campeonatos -->
+                            </select>
+                            </div>
+                        <div class="col-xl-4 col-lg-4 col-md-4">
                             <label for="cartoesVermelhos">Cartões Vermelhos</label><br>
-                            <input name="cartoesVermelhos" type="text" id="cartoesVermelhos" class="form-control" /><br>
+                            <input name="cartoesVermelhos" type="text" id="cartoesVermelhos" class="form-control" disabled="disabled"/><br>
                         </div>
-                        <div class="col-xl-6 col-lg-6 col-md-6">
+                        <div class="col-xl-4 col-lg-4 col-md-4">
                             <label for="cartoesAmarelos">Cartões Amarelos</label><br>
-                            <input name="cartoesAmarelos" type="text" id="cartoesAmarelos" class="form-control" /><br>
+                            <input name="cartoesAmarelos" type="text" id="cartoesAmarelos" class="form-control" disabled="disabled"/><br>
                         </div>
-                        <div class="col-xl-6 col-lg-6 col-md-6">
-                            <label for="cartoesAmarelos">Situação do jogador</label><br>
-                            <input name="cartoesAmarelos" type="text" id="cartoesAmarelos" class="form-control" /><br>
+                        <div class="col-xl-4 col-lg-4 col-md-4">
+                            <label for="situacao">Situação do jogador</label><br>
+                            <input name="situacao" type="text" id="situacao" class="form-control" disabled="disabled"/><br>
                         </div>
                     </div>
                 </form>
@@ -48,6 +56,89 @@
     <script src="../bootstrap-4.3.1/js/bootstrap.js" type='text/javascript'></script>
     <script src="../js/ajaxRequest.js" type='text/javascript'></script>
     <script src="../js/includes.js" type="text/javascript"></script>
+    <script>
+        window.onload = function() {
+            listJogadores();
+            fillSelect();
+        };
+
+        function listJogadores() {
+            var xmlhttp = new FactoryXMLHttpRequest();
+
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4) {
+                    var resposta = JSON.parse(xmlhttp.responseText);
+                    var listaJogadores = resposta.listaJogadores;
+
+                    for(var i = 0; i < listaJogadores.length; i++) {
+                        var content = `<tr onclick="getContador(${listaJogadores[i].id})">
+                                        <td>${listaJogadores[i].nome}</td>
+                                        <td>${listaJogadores[i].posicao}</td>
+                                    </tr>`;
+                        $("table").append(content);
+                    }
+                }
+            }
+
+            if (xmlhttp) {
+                xmlhttp.open('get', 'http://localhost:' + porta + '/Cartoes/list', true);
+                xmlhttp.send();
+            }
+        }
+
+        function getContador(idJogador) {
+            var xmlhttp = new FactoryXMLHttpRequest();
+
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4) {
+                    if(xmlhttp.responseText.toUpperCase().indexOf("ERRO") !== -1) {
+                        $("#idJogador").html("");
+                        $("#nome").val("");
+                        $("#cartoesAmarelos").val("");
+                        $("#cartoesVermelhos").val("");
+                        $("#situacao").val("");
+
+                        alert(xmlhttp.responseText.split(">")[1]);
+                    } else {
+                        var jsonObj = JSON.parse(xmlhttp.responseText);
+
+                        $("#idJogador").html(jsonObj.jogador.id);
+                        $("#nome").val(jsonObj.jogador.nome);
+                        $("#cartoesAmarelos").val(jsonObj.cartoesAmarelos);
+                        $("#cartoesVermelhos").val(jsonObj.cartoesVermelhos);
+                        $("#situacao").val(jsonObj.suspenso ? 'Suspenso' : 'Liberado');
+                    }
+                }
+            }
+
+            if (xmlhttp) {
+                var idCampeonato = $("#campeonato").val();
+                
+                xmlhttp.open('get', 'http://localhost:'+porta+'/Cartoes/get?jogador='+idJogador+'&campeonato='+idCampeonato, true);
+                xmlhttp.send();
+            }
+        }
+
+        function fillSelect() {
+            var xmlhttp = new FactoryXMLHttpRequest();
+
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4) {
+                    var jsonObj = JSON.parse(xmlhttp.responseText);
+
+                    $(jsonObj.listaCampeonatos).each(function () {
+                        var content = `<option value="${this.id}">${this.nome}</option>`;
+                        $("#campeonato").append(content);
+                    });
+                }
+            }
+
+            if (xmlhttp) {
+                xmlhttp.open('get', 'http://localhost:' + porta + '/Cartoes/listCampeonato');
+                xmlhttp.send();
+            }
+        }
+    </script>
 </body>
 
 </html>

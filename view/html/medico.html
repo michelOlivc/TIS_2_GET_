@@ -11,6 +11,7 @@
     <div class="conteudo" style="padding-top: 30px;">
         <div class="row">
             <div class="col-xl-4 col-lg-4 col-md-4">
+                    <h6 id="cabecalhoLista">Time</h6>
                 <table class="table">
                     <tr>
                         <th>Jogador</th>
@@ -95,6 +96,7 @@
 
                     if(jsonObj.nivelDaLesao > 0) {
                         $(".campo-afast").css("visibility", "visible");
+                        $("#afastamento").val(jsonObj.diasLiberacao);
                     } else {
                         $(".campo-afast").css("visibility", "hidden");
                     }
