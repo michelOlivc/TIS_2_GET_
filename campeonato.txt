@@ -1,0 +1,4 @@
+1;Campeonato brasileiro;38
+2;Copa do mundo;12
+3;Copa do Brasil;8
+6;Campeonato anual de papagaio;11

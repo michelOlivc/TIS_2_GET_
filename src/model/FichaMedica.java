@@ -89,6 +89,7 @@ public class FichaMedica implements JsonFormatter {
 		obj.put("jogador", this.jogador.toJson());
 		obj.put("nivelDaLesao", this.nivelDaLesao.getValor());
 		obj.put("dataEntrada", pattern.format(this.dataEntrada));
+		obj.put("diasLiberacao", diasAteLiberar(this.jogador));
 		
 		return obj;
 	}

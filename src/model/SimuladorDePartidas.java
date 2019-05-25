@@ -7,6 +7,7 @@ import model.enums.*;
 import dao.EstatisticaDAO;
 import dao.FichaMedicaDAO;
 import dao.JogadorDAO;
+import dao.TimeDAO;
 
 public class SimuladorDePartidas {
 
@@ -15,6 +16,7 @@ public class SimuladorDePartidas {
 		Estatistica [] estatisticas = new Estatistica [12];
 		
 		JogadorDAO player = new JogadorDAO();
+		TimeDAO timeDAO = new TimeDAO();
 		EstatisticaDAO est = new EstatisticaDAO();
 		FichaMedicaDAO fichaDAO = new FichaMedicaDAO();
 		FichaMedica ficha = new FichaMedica();
@@ -24,34 +26,25 @@ public class SimuladorDePartidas {
 		}
 		
 		Random rand = new Random();
-		int p = rand.nextInt(50);
-		int g = rand.nextInt(20);
-		int a = rand.nextInt(10);
-		int l = rand.nextInt(4);
+		int passeDeBola = rand.nextInt(50);
+		int gols = rand.nextInt(10);
+		int assistencias = rand.nextInt(20);
+		int lesao = rand.nextInt(4);
 		
 		for(int i=0;i<11;i++) {
 			
-			p = rand.nextInt(50);
-		    g = rand.nextInt(10);
-			a = rand.nextInt(20);
+			passeDeBola = rand.nextInt(50);
+		    
+			assistencias = rand.nextInt(20);
 			
-			estatisticas[i].setPasseDeBola(p);
-			estatisticas[i].setGols(g);
-			estatisticas[i].setAssistencias(a);
-			
-			//get ficha medica por id=i
-			fichaDAO.get(i);
-			//update com dados aleatorios
-			l = rand.nextInt(4);
-			if(l==1){l=30;}else if(l==2){l=60;}else{l=90;}
-			ficha.setNivelDaLesao(NivelLesao.findByValor(l));
-			fichaDAO.update(ficha);
-			//save to file
-			
+			estatisticas[i].setPasseDeBola(passeDeBola);
+			estatisticas[i].setGols(gols);
+			estatisticas[i].setAssistencias(assistencias);
 			
 			//System.out.println(estatisticas[i].toJson().toString());
 			//est.add(estatisticas[i]);
 		}
+		
 		
 		
 		

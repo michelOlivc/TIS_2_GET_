@@ -1,4 +1,4 @@
 19;Michel;Zagueiro;2;2;2;
 27;Sunimar;Goleiro;4;2;1;
 28;Ronaldo;Atacante;3;2;1;
-29;Ronaldinho Gaúcho;Goleiro;3;2;1;
+29;Ronaldinho Gaúcho;Goleiro;3;5;5;

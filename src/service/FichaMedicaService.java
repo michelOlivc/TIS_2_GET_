@@ -17,10 +17,10 @@ public class FichaMedicaService {
 				}
 			}
 			
-			return "ERRO: Ficha não encontrada";
+			return "<ERRO>Ficha não encontrada";
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "ERRO: Erro ao consultar Ficha Medica";
+			return "<ERRO>Erro ao consultar Ficha Medica";
 		}
 	}
 	

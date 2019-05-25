@@ -1,17 +1,20 @@
 package model;
 
-public class Contadordecartoes {
+import org.json.JSONObject;
+
+public class Contadordecartoes implements JsonFormatter {
 	private Jogador jogador;
 	private Campeonato campeonato;
 	private int contAmarelo;
 	private int contVermelho;
 	private boolean suspenso;
+	private Integer id;
 	
-    public ContadorDeCartoes() {
-    	
-    }
-    
-	public Contadordecartoes(int contAmarelo, int contVermelho, Campeonato campeonato, Jogador jogador,boolean suspenso) {
+	public Contadordecartoes() {
+
+	}
+
+	public Contadordecartoes(int contAmarelo, int contVermelho, Campeonato campeonato, Jogador jogador) {
 		this.contAmarelo = 0;
 		this.contVermelho = 0;
 		this.campeonato = campeonato;
@@ -19,6 +22,13 @@ public class Contadordecartoes {
 		this.setSuspenso(false);
 	}
 
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
 	public Jogador getJogador() {
 		return jogador;
 	}
@@ -58,6 +68,23 @@ public class Contadordecartoes {
 	public void setCampeonato(Campeonato campeonato) {
 		this.campeonato = campeonato;
 	}
+	
+	@Override
+	public JSONObject toJson() {
+		JSONObject obj = new JSONObject();
+		obj.put("id", this.id);
+		obj.put("jogador", this.jogador.toJson());
+		obj.put("campeonato", this.campeonato.toJson());
+		obj.put("cartoesAmarelos", this.contAmarelo);
+		obj.put("cartoesVermelhos", this.contVermelho);
+		obj.put("suspenso", this.suspenso);
+		
+		return obj;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		return this.id == ((Contadordecartoes) obj).id;
+	}
 
 	public void insereCartaoAmarelo() {
 		if (contAmarelo < 3) {
@@ -90,19 +117,21 @@ public class Contadordecartoes {
 	}
 
 	public void suspenderjogador() {
-		if(testaQuantAmarelo()==true || testaQuantVemerlho()==true )
-			set Suspenso(true);
+		if (testaQuantAmarelo() == true || testaQuantVemerlho() == true)
+			setSuspenso(true);
 	}
 
 	public void cumprirSuspensao() {
-		if(suspenderjogador()==true) {
-		if(testaQuantVemerlho==true) {
-			contVermelho==0
+		if (isSuspenso() == true) {
+			if (testaQuantVemerlho() == true) {
+
+				contVermelho = 0;
+			}
+			if (testaQuantAmarelo() == true) {
+
+				contAmarelo = 0;
+			}
+			setSuspenso(false);
 		}
-		if(testaQuantAmarelo==true) {
-				contAmerelo==0
-		}
-		set Suspenso(false);
-	}
 	}
 }
