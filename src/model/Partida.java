@@ -8,7 +8,6 @@ import org.json.JSONObject;
 
 public class Partida implements JsonFormatter {
 	private Integer id;
-
 	private List<Estatistica> estatisticasJogador;
 
 	public Partida() {

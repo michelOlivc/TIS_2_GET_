@@ -4,26 +4,28 @@ import org.json.JSONObject;
 
 public class Estatistica implements JsonFormatter {
 	
+	private Integer id;
 	private Jogador jogador;
+	private Campeonato campeonato;
 	private int passeDeBola;
 	private int gols;
 	private int assistencias;
-	private Integer id;
 	
+	public Estatistica() { }
 	
-	
-	public Estatistica(Jogador jogador, int passeDeBola, int gols, int assistencias) {
-	
-		this.jogador = jogador;
+	public Estatistica(int passeDeBola, int gols, int assistencias) {
 		this.passeDeBola = passeDeBola;
 		this.gols = gols;
 		this.assistencias = assistencias;
 	}
 	
-	public Estatistica() {
-		
+	public Estatistica(Jogador jogador, Campeonato campeonato, int passeDeBola, int gols, int assistencias) {
+		this.jogador = jogador;
+		this.campeonato = campeonato;
+		this.passeDeBola = passeDeBola;
+		this.gols = gols;
+		this.assistencias = assistencias;
 	}
-
 
 	public Jogador getJogador() {
 		return jogador;
@@ -44,7 +46,10 @@ public class Estatistica implements JsonFormatter {
 		return assistencias;
 	}
 
-
+	public Campeonato getCampeonato() {
+		return campeonato;
+	}
+	
 	public void setJogador(Jogador jogador) {
 		this.jogador = jogador;
 	}
@@ -72,6 +77,10 @@ public class Estatistica implements JsonFormatter {
 		this.id = id;
 	}
 	
+	public void setCampeonato(Campeonato campeonato) {
+		this.campeonato = campeonato;
+	}
+	
 	@Override
 	public JSONObject toJson() {
 		JSONObject obj = new JSONObject();
@@ -88,5 +97,4 @@ public class Estatistica implements JsonFormatter {
 	public boolean equals(Object obj) {
 		return this.id == ((Estatistica) obj).id;
 	}
-	
 }
