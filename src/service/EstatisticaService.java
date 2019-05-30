@@ -52,19 +52,9 @@ public class EstatisticaService {
 			Jogador jogador = jogadorDAO.get(Integer.parseInt(query.get("idJogador")));
 			Campeonato campeonato = campeonatoDAO.get(Integer.parseInt(query.get("idCampeonato")));
 			
-			List<Estatistica> estatisticasJogador = new ArrayList<Estatistica>();
+			String json = mediaToJson(jogador, campeonato);
 			
-			for(Partida p : campeonato.getTodasPartidas()) {
-				List<Estatistica> resultados = p.getEstatisticasJogador().stream()
-						.filter(e -> jogador.equals(e.getJogador()) && campeonato.equals(e.getCampeonato()))
-						.collect(Collectors.toList());
-				
-				estatisticasJogador.addAll(resultados);
-			}
-			
-			// criar função para tirar a média das estatísticas
-			
-			return resultado.toJson().toString();
+			return json;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "<ERRO>Erro ao consultar estatística";
@@ -91,6 +81,41 @@ public class EstatisticaService {
 		obj.put("listaEstatisticas", new JSONArray(listaEstatisticas));
 
 		return obj;
+	}
+	
+	public String mediaToJson(Jogador jogador, Campeonato campeonato) {
+		List<Estatistica> estatisticasJogador = new ArrayList<Estatistica>();
+		
+		for(Partida p : campeonato.getTodasPartidas()) {
+			List<Estatistica> resultados = p.getEstatisticasJogador()
+					.stream()
+					.filter(e -> jogador.equals(e.getJogador()) && campeonato.equals(e.getCampeonato()))
+					.collect(Collectors.toList());
+			
+			estatisticasJogador.addAll(resultados);
+		}
+		
+		double gols = estatisticasJogador.stream()
+				.mapToInt(Estatistica::getGols)
+				.average()
+				.getAsDouble();
+		
+		double assist = estatisticasJogador.stream()
+				.mapToInt(Estatistica::getAssistencias)
+				.average()
+				.getAsDouble();
+		
+		double passe = estatisticasJogador.stream()
+				.mapToInt(Estatistica::getPasseDeBola)
+				.average()
+				.getAsDouble();
+		
+		StringBuilder json = new StringBuilder("{ \"partida\" : \"media\", ");
+		json.append("\"passeDeBola\" : \"" + passe + "\", ");
+		json.append("\"gols\" : \"" + gols + "\", ");
+		json.append("\"assistencias\" : \"" + assist + "\" }");
+		
+		return json.toString();
 	}
 	
 	public <T> Collector<T, ?, T> toElement() {
