@@ -11,7 +11,7 @@
     <div class="conteudo" style="padding-top: 30px;">
         <div class="row">
             <div class="col-xl-4 col-lg-4 col-md-4">
-                <table class="table">
+                <table class="table" id="listaJogadores">
                     <tr>
                         <th>Jogador</th><th>Posição</th>
                     </tr>
@@ -21,18 +21,15 @@
             <div class="col-xl-7 col-lg-7 col-md-7">
                 <form action="">
                     <div class="form-group row">
+                        <div style="display:none;" id="idJogador"></div>
                         <div class="col-xl-8 col-lg-8 col-md-8">
                             <label for="nome">Nome do jogador</label><br>
-                            <input name="nome" type="text" id="nome" class="form-control" /><br>
+                            <input name="nome" type="text" id="nome" class="form-control" readonly="readonly"/><br>
                         </div>
                         <div class="col-xl-4 col-lg-4 col-md-4">
                             <label for="campeonato">Campeonado</label><br>
                             <select name="campeonato" type="text" id="campeonato" class="form-control">
-                                <option value="0">
-                                    <null>
-                                </option>
-                                <option value="1">Campeonato Estadual</option>
-                                <option value="2">Campeonato Brasileiro</option>
+                                <option value="0"><null></option>                                
                             </select>
                         </div>
                         <div class="col-xl-12 col-lg-12 col-md-12" style="margin: 40px 0">
@@ -43,21 +40,21 @@
                                 </tr>
                                 <tr>
                                     <td>Gols</td>
-                                    <td>999</td>
+                                    <td id="golsUltima"></td>
                                     <td>Gols</td>
-                                    <td>999</td>
+                                    <td id="golsMedia"></td>
                                 </tr>
                                 <tr>
                                     <td>Passes</td>
-                                    <td>999</td>
+                                    <td id="passesUltima"></td>
                                     <td>Passes</td>
-                                    <td>999</td>
+                                    <td id="passesMedia"></td>
                                 </tr>
                                 <tr>
                                     <td>Assistências</td>
-                                    <td>999</td>
+                                    <td id="assistUltima"></td>
                                     <td>Assistências</td>
-                                    <td>999</td>
+                                    <td id="assistMedia"></td>
                                 </tr>
                             </table>
                         </div>
@@ -71,6 +68,96 @@
     <script src="../bootstrap-4.3.1/js/bootstrap.js" type='text/javascript'></script>
     <script src="../js/ajaxRequest.js" type='text/javascript'></script>
     <script src="../js/includes.js" type="text/javascript"></script>
+    <script>
+        window.onload = function() {
+            listJogadores();
+            fillSelect();
+        };
+
+        function listJogadores() {
+            var xmlhttp = new FactoryXMLHttpRequest();
+
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4) {
+                    var resposta = JSON.parse(xmlhttp.responseText);
+                    var listaJogadores = resposta.listaJogadores;
+
+                    for(var i = 0; i < listaJogadores.length; i++) {
+                        var content = `<tr onclick="getEstatistica(${listaJogadores[i].id})">
+                                        <td>${listaJogadores[i].nome}</td>
+                                        <td>${listaJogadores[i].posicao}</td>
+                                    </tr>`;
+                        $("#listaJogadores").append(content);
+                    }
+                }
+            }
+
+            if (xmlhttp) {
+                xmlhttp.open('get', 'http://localhost:' + porta + '/Estatistica/jogadores', true);
+                xmlhttp.send();
+            }
+        }
+
+        function getEstatistica(idJogador) {
+            var xmlhttp = new FactoryXMLHttpRequest();
+
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4) {
+                    if(xmlhttp.responseText.toUpperCase().indexOf("ERRO") !== -1) {
+                        $("#idJogador").html("");
+                        $("#nome").val("");
+                        $("#golsUltima").html("");
+                        $("#golsMedia").html("");
+                        $("#passesUltima").html("");
+                        $("#passesMedia").html("");
+                        $("#assistUltima").html("");
+                        $("#assistMedia").html("");
+
+                        alert(xmlhttp.responseText.split(">")[1]);
+                    } else {
+                        var jsonObj = JSON.parse(xmlhttp.responseText);
+
+                        $("#idJogador").html(jsonObj.ultima.jogador.id);
+                        $("#nome").val(jsonObj.ultima.jogador.nome);
+
+                        $("#golsUltima").html(jsonObj.ultima.gols);
+                        $("#golsMedia").html(jsonObj.media.gols);
+                        $("#passesUltima").html(jsonObj.ultima.passes);
+                        $("#passesMedia").html(jsonObj.media.passes);
+                        $("#assistUltima").html(jsonObj.ultima.assistencias);
+                        $("#assistMedia").html(jsonObj.media.assistencias);
+                    }
+                }
+            }
+
+            if (xmlhttp) {
+                var idCampeonato = $("#campeonato").val();
+                
+                xmlhttp.open('get', 'http://localhost:'+porta+'/Estatistica/get?idJogador='+idJogador+'&idCampeonato='+idCampeonato, true);
+                xmlhttp.send();
+            }
+        }
+
+        function fillSelect() {
+            var xmlhttp = new FactoryXMLHttpRequest();
+
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4) {
+                    var jsonObj = JSON.parse(xmlhttp.responseText);
+
+                    $(jsonObj.listaCampeonatos).each(function () {
+                        var content = `<option value="${this.id}">${this.nome}</option>`;
+                        $("#campeonato").append(content);
+                    });
+                }
+            }
+
+            if (xmlhttp) {
+                xmlhttp.open('get', 'http://localhost:' + porta + '/Estatistica/campeonatos');
+                xmlhttp.send();
+            }
+        }
+    </script>
 </body>
 
 </html>
