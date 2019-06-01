@@ -10,9 +10,10 @@ import model.Time;
 
 public class TimeDAO {
 	static final String ARQUIVO = "time.txt";
-	private JogadorDAO jogadorDAO = new JogadorDAO();
 	
 	public Time get() {
+		JogadorDAO jogadorDAO = new JogadorDAO();
+		
 		Time retorno = null;
 		Time t = null;
 

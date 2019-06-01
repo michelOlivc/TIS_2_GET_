@@ -46,6 +46,32 @@ public class JogadorDAO implements GenericDAO<Jogador, Integer> {
 		return retorno;
 	}
 
+	public Jogador lazyGet(Integer id) {
+		Jogador retorno = null;
+		Jogador j = null;
+
+		try (BufferedReader buffer_entrada = new BufferedReader(new FileReader(ARQUIVO))) {
+			String linha;
+
+			while ((linha = buffer_entrada.readLine()) != null) {
+				String[] dados = linha.split(";");
+
+				j = new Jogador();
+				j.setId(Integer.parseInt(dados[0]));
+				j.setNome(dados[1]);
+
+				if (id.equals(j.getId())) {
+					retorno = j;
+					break;
+				}
+			}
+		} catch (Exception e) {
+			System.out.println("ERRO ao ler o Jogador '" + j.getId() + "' do disco rígido!");
+			e.printStackTrace();
+		}
+		return retorno;
+	}
+	
 	@SuppressWarnings("resource")
 	@Override
 	public void add(Jogador t) {

@@ -81,7 +81,7 @@ public class CampeonatoService {
 	}
 
 	private JSONObject listaCampeonatoJSON() throws NumberFormatException, IOException {
-		List<Campeonato> listaCampeonatos = campeonatoDAO.getAll();
+		List<Campeonato> listaCampeonatos = campeonatoDAO.getAllForCombo();
 
 		JSONArray array = new JSONArray();
 		for (Campeonato j : listaCampeonatos) {

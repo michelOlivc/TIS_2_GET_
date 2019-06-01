@@ -3,6 +3,7 @@ package service;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -109,7 +110,9 @@ public class JogadorService {
 	}
 
 	private JSONObject listaJogadoresJSON() throws NumberFormatException, IOException {
-		List<Jogador> listaJogadores = jogadorDAO.getAll();
+		List<Jogador> listaJogadores = jogadorDAO.getAll().stream()
+											.sorted((j1, j2) -> j1.getNome().compareTo(j2.getNome()))
+											.collect(Collectors.toList());
 
 		JSONArray array = new JSONArray();
 		for (Jogador j : listaJogadores) {

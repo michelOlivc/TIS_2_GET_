@@ -16,10 +16,10 @@ import model.enums.NivelLesao;
 		static final String ARQUIVO = "fichasMedicas.txt";
 		static final String SEQUENCE = "sequence_fichas.txt";
 		
-		JogadorDAO jogDAO = new JogadorDAO();
-
 		@Override
 		public FichaMedica get(Integer id) {
+			JogadorDAO jogDAO = new JogadorDAO();
+			
 			FichaMedica retorno = null;
 			FichaMedica f = null;
 
@@ -107,6 +107,8 @@ import model.enums.NivelLesao;
 
 		@Override
 		public List<FichaMedica> getAll() throws NumberFormatException, IOException {
+			JogadorDAO jogDAO = new JogadorDAO();
+			
 			List<FichaMedica> fichas = new ArrayList<FichaMedica>();
 			FichaMedica f = null;
 			BufferedReader buffer_entrada = new BufferedReader(new FileReader(ARQUIVO));

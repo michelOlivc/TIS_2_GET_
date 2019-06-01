@@ -1,5 +1,6 @@
 package model;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class Estatistica implements JsonFormatter {
@@ -86,7 +87,7 @@ public class Estatistica implements JsonFormatter {
 		JSONObject obj = new JSONObject();
 		obj.put("id", this.id);
 		obj.put("jogador", this.jogador.toJson());
-		obj.put("passe de bola", this.passeDeBola);
+		obj.put("passes", this.passeDeBola);
 		obj.put("gols", this.gols);
 		obj.put("assistencias", this.assistencias);
 		

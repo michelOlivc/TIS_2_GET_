@@ -14,6 +14,7 @@ import org.simpleframework.transport.connect.SocketConnection;
 
 import controller.CampeonatoController;
 import controller.CartoesController;
+import controller.EstatisticaController;
 import controller.JogadorController;
 import controller.SituacaoMedicaController;
 import controller.TimeController;
@@ -24,6 +25,7 @@ public class HttpServer implements Container {
 	private SituacaoMedicaController situacaoController = new SituacaoMedicaController();
 	private CartoesController cartoesController = new CartoesController();
 	private CampeonatoController campeonatoController = new CampeonatoController();
+	private EstatisticaController estatisticaController = new EstatisticaController();
 	
 	@Override
 	public void handle(Request request, Response response) {
@@ -39,6 +41,8 @@ public class HttpServer implements Container {
 			cartoesController.rotearRequisicao(request, response);
 		} else if(path.startsWith("/Campeonato")) {
 			campeonatoController.rotearRequisicao(request, response);
+		} else if(path.startsWith("/Estatistica")) {
+			estatisticaController.rotearRequisicao(request, response);
 		}
 	}
 	

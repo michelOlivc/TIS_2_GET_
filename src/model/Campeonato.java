@@ -3,23 +3,22 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class Campeonato implements JsonFormatter {
 	private String nome;
 	private int jogos;
-	private int cont;
 	private Integer id;
 	private List<Partida> partidas;
 
 	public Campeonato() {
-
+		this.partidas = new ArrayList<Partida>();
 	}
 
 	public Campeonato(String nome, int jogos) {
 		this.nome = nome;
 		this.jogos = jogos;
-		this.cont = 0;
 		this.partidas = new ArrayList<Partida>();
 	}
 
@@ -53,9 +52,20 @@ public class Campeonato implements JsonFormatter {
 		obj.put("id", this.id);
 		obj.put("nome", this.nome);
 		obj.put("jogos", this.jogos);
-		obj.put("cont", this.cont);
+		obj.put("partidas", toJsonArray());
 		return obj;
 	}
+	
+	@Override
+	public JSONArray toJsonArray() {
+		JSONArray array = new JSONArray();
+		for(Partida p : this.partidas) {
+			array.put(p.toJson());
+		}
+		
+		return array;
+	}
+	
 
 	@Override
 	public boolean equals(Object obj) {
@@ -71,9 +81,8 @@ public class Campeonato implements JsonFormatter {
 	}
 
 	public void inserirPartida(Partida partida) {
-		if (cont < jogos) {
+		if (this.partidas.size() < jogos) {
 			this.partidas.add(partida);
-			this.cont++;
 		}
 	}
 }

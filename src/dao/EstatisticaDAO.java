@@ -10,16 +10,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.Estatistica;
-import model.Jogador;
 
 public class EstatisticaDAO implements GenericDAO<Estatistica, Integer> {
 	static final String ARQUIVO = "estatistica.txt";
 	static final String SEQUENCE = "sequence_estatistica.txt";
-
-	JogadorDAO jogadorDAO = new JogadorDAO();
 	
 	@Override
 	public Estatistica get(Integer id) {
+		JogadorDAO jogadorDAO = new JogadorDAO();
+		CampeonatoDAO campeonatoDAO = new CampeonatoDAO();
+		
 		Estatistica retorno = null;
 		Estatistica j = null;
 
@@ -31,10 +31,11 @@ public class EstatisticaDAO implements GenericDAO<Estatistica, Integer> {
 
 				j = new Estatistica();
 				j.setId(Integer.parseInt(dados[0]));
-				j.setJogador(jogadorDAO.get(Integer.parseInt(dados[1])));
-				j.setPasseDeBola(Integer.parseInt(dados[2]));
-				j.setGols(Integer.parseInt(dados[3]));
-				j.setAssistencias(Integer.parseInt(dados[4]));
+				j.setJogador(jogadorDAO.lazyGet(Integer.parseInt(dados[1])));
+				j.setCampeonato(campeonatoDAO.lazyGet(Integer.parseInt(dados[2])));
+				j.setPasseDeBola(Integer.parseInt(dados[3]));
+				j.setGols(Integer.parseInt(dados[4]));
+				j.setAssistencias(Integer.parseInt(dados[5]));
 
 				if (id.equals(j.getId())) {
 					retorno = j;
@@ -74,6 +75,7 @@ public class EstatisticaDAO implements GenericDAO<Estatistica, Integer> {
 		String separadorDeAtributo = ";";
 			bufferOutEstatistica.write(generatedId + separadorDeAtributo);
 			bufferOutEstatistica.write(t.getJogador().getId() + separadorDeAtributo);
+			bufferOutEstatistica.write(t.getCampeonato().getId() + separadorDeAtributo);
 			bufferOutEstatistica.write(t.getPasseDeBola() + separadorDeAtributo);
 			bufferOutEstatistica.write(t.getGols() + separadorDeAtributo);
 			bufferOutEstatistica.write(t.getAssistencias()+"");
@@ -111,6 +113,9 @@ public class EstatisticaDAO implements GenericDAO<Estatistica, Integer> {
 
 	@Override
 	public List<Estatistica> getAll() throws FileNotFoundException, NumberFormatException, IOException {
+		JogadorDAO jogadorDAO = new JogadorDAO();
+		CampeonatoDAO campeonatoDAO = new CampeonatoDAO();
+		
 		List<Estatistica> estatistica = new ArrayList<Estatistica>();
 		Estatistica j = null;
 		BufferedReader buffer_entrada = new BufferedReader(new FileReader(ARQUIVO));
@@ -121,10 +126,11 @@ public class EstatisticaDAO implements GenericDAO<Estatistica, Integer> {
 
 			j = new Estatistica();
 			j.setId(Integer.parseInt(dados[0]));
-			j.setJogador(jogadorDAO.get(Integer.parseInt(dados[1])));
-			j.setPasseDeBola(Integer.parseInt(dados[2]));
-			j.setGols(Integer.parseInt(dados[3]));
-			j.setAssistencias(Integer.parseInt(dados[4]));
+			j.setJogador(jogadorDAO.lazyGet(Integer.parseInt(dados[1])));
+			j.setCampeonato(campeonatoDAO.lazyGet(Integer.parseInt(dados[2])));
+			j.setPasseDeBola(Integer.parseInt(dados[3]));
+			j.setGols(Integer.parseInt(dados[4]));
+			j.setAssistencias(Integer.parseInt(dados[5]));
 
 			estatistica.add(j);
 		}
@@ -132,21 +138,21 @@ public class EstatisticaDAO implements GenericDAO<Estatistica, Integer> {
 		return estatistica;
 
 	}
-
+	
 	public void saveToFile(List<Estatistica> list) throws IOException {
 		BufferedWriter buffer_saida = new BufferedWriter(new FileWriter(ARQUIVO, false));
 		String separador = ";";
 		for (Estatistica j : list) {
-			
-		
 			buffer_saida.write(j.getId() + separador);
 			buffer_saida.write(j.getJogador().getId() + separador);
+			buffer_saida.write(j.getCampeonato().getId() + separador);
 			buffer_saida.write(j.getPasseDeBola() + separador);
 			buffer_saida.write(j.getGols() + separador);
 			buffer_saida.write(j.getAssistencias() + separador);
 			buffer_saida.write(System.getProperty("line.separator"));
 			buffer_saida.flush();
 		}
+		
 		buffer_saida.close();
 	}
 	

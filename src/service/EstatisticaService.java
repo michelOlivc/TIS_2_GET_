@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.simpleframework.http.Query;
 import org.simpleframework.http.Request;
 
@@ -32,66 +30,55 @@ public class EstatisticaService {
 	private ContadorCartaoDAO contadorDAO = new ContadorCartaoDAO();
 	private FichaMedicaDAO fichaDAO = new FichaMedicaDAO();
 	
+	private CampeonatoService campeonatoService = new CampeonatoService();
+	
 	public String consultarEstatisticaPorJogador(Request request) {
 		try {
 			Query query = request.getQuery();
 			
-			Jogador jogador = jogadorDAO.get(Integer.parseInt(query.get("idJogador")));
-			Campeonato campeonato = campeonatoDAO.get(Integer.parseInt(query.get("idCampeonato")));
+			Integer idJogador = Integer.parseInt(query.get("idJogador"));
+			Integer idCampeonato = Integer.parseInt(query.get("idCampeonato"));
+			
+			Jogador jogador = jogadorDAO.get(idJogador);
+			Campeonato campeonato = campeonatoDAO.lazyGet(idCampeonato);
 			
 			List<Estatistica> resultados = estatisticaDAO.getAll().stream()
 					.filter(e -> jogador.equals(e.getJogador()) 
 							&& campeonato.equals(e.getCampeonato()))
 					.collect(Collectors.toList());
 			
-			return resultados.get(resultados.size() - 1)
-					.toJson()
-					.toString();
+			StringBuilder json = new StringBuilder();
+			json.append("{ \"ultima\" : " + resultados.get(resultados.size() - 1).toJson() + ",")
+				.append("\"media\" : " + mediaToJson(jogador, campeonatoDAO.get(idCampeonato)) + " }");
+			
+			return json.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "<ERRO>Erro ao consultar estatÃ­stica";
+			return "<ERRO>Erro ao consultar estatatística";
 		}
 	}
 	
-	public String consultarMediaEstatisticasPorCampeonato(Request request) {
-		try {
-			Query query = request.getQuery();
-			
-			Jogador jogador = jogadorDAO.get(Integer.parseInt(query.get("idJogador")));
-			Campeonato campeonato = campeonatoDAO.get(Integer.parseInt(query.get("idCampeonato")));
-			
-			String json = mediaToJson(jogador, campeonato);
-			
-			return json;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "<ERRO>Erro ao consultar estatÃ­stica";
-		}
+	public String carregarCampeonatos(Request request) {
+		return campeonatoService.listarCampeonato(request);
 	}
 	
-	public String listarEstatistica(Request request) {
-		try {
-			return listaEstatisticaJSON().toString();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "<ERRO>Erro ao consultar Estatisticas";
-		}
-	}
+//	public String consultarMediaEstatisticasPorCampeonato(Request request) {
+//		try {
+//			Query query = request.getQuery();
+//			
+//			Jogador jogador = jogadorDAO.get(Integer.parseInt(query.get("idJogador")));
+//			Campeonato campeonato = campeonatoDAO.get(Integer.parseInt(query.get("idCampeonato")));
+//			
+//			String json = mediaToJson(jogador, campeonato);
+//			
+//			return json;
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			return "<ERRO>Erro ao consultar estatatística";
+//		}
+//	}
 	
-	private JSONObject listaEstatisticaJSON() throws NumberFormatException, IOException {
-		List<Estatistica> listaEstatisticas = estatisticaDAO.getAll();
-
-		JSONArray array = new JSONArray();
-		for (Estatistica j : listaEstatisticas) {
-			array.put(j.toJson());
-		}
-		JSONObject obj = new JSONObject();
-		obj.put("listaEstatisticas", new JSONArray(listaEstatisticas));
-
-		return obj;
-	}
-
-	public String suspensosTimePorCampeonato(Request request) {
+	public String consultarSuspensosTimePorCampeonato(Request request) {
 		try {
 			Query query = request.getQuery();
 			
@@ -104,7 +91,6 @@ public class EstatisticaService {
 				for(Contadordecartoes contador : contadoresCartao) {
 					if(jogador.equals(contador.getJogador())
 							&& campeonato.equals(contador.getCampeonato())) {
-						
 						if(contador.isSuspenso()) 
 							suspensos += 1;
 						if(contador.getContAmarelo() == 1)
@@ -118,12 +104,16 @@ public class EstatisticaService {
 			}
 			
 			StringBuilder json = new StringBuilder();
-			json.append("{ ");
-			json.append(("\"suspensos\" : \"" + suspensos * 100 / jogadores.size() + "%\", "));
-			json.append(("\"comUmAmarelo\" : \"" + comUmAmarelo * 100 / jogadores.size() + "%\", "));
-			json.append(("\"comDoisAmarelos\" : \"" + comDoisAmarelos * 100 / jogadores.size() + "%\", "));
-			json.append(("\"comUmVermelho\" : \"" + comUmVermelho * 100 / jogadores.size() + "%\""));
-			json.append(" }");
+			json.append("{ ")
+			 	.append(("\"suspensos\" : "))
+			 	.append("{ \"numero\" : \"" + suspensos + "\", \"porcentagem\" : " + suspensos * 100 / jogadores.size() + "%\" },")
+			 	.append(("\"comUmAmarelo\" : "))
+			 	.append("{ \"numero\" : \"" + comUmAmarelo + "\", \"porcentagem\" : " + comUmAmarelo * 100 / jogadores.size() + "%\" },")
+			 	.append(("\"comDoisAmarelos\" : "))
+			 	.append("{ \"numero\" : \"" + comDoisAmarelos + "\", \"porcentagem\" : " + comDoisAmarelos * 100 / jogadores.size() + "%\" },")
+			 	.append(("\"comUmVermelho\" : "))
+			 	.append("{ \"numero\" : \"" + comUmVermelho + "\", \"porcentagem\" : " + comUmVermelho * 100 / jogadores.size() + "%\" }")
+			 	.append(" }");
 			
 			return json.toString();
 		} catch (NumberFormatException | IOException e) {
@@ -132,52 +122,25 @@ public class EstatisticaService {
 		}
 	}
 	
-	public String lesionadosTime(Request request) {
-		Query query = request.getQuery();
-		
-		List<Jogador> jogadores =  timeDAO.get().getListaJogadores();
-		
+	public String consultarLesionadosTime(Request request) {
 		try {
+			List<Jogador> jogadores =  timeDAO.get().getListaJogadores();
 			List<FichaMedica> fichasMedicas = fichaDAO.getAll();
 			
-			double suspensos = 0.0, comUmAmarelo = 0.0, comDoisAmarelos = 0.0, comUmVermelho = 0.0;
+			int lesionados = 0;
 			
 			for(Jogador jogador : jogadores) {
-				for(Contadordecartoes contador : contadoresCartao) {
-					if(jogador.equals(contador.getJogador())
-							&& campeonato.equals(contador.getCampeonato())) {
-						
-						// usar stream para contar quantos suspensos, com um amarelo....
-						
-						/*
-						 * Exemplo:
-						 * 
-						 * public int totalEmEstoque() {
-								return listaDeProdutos.stream()
-								.mapToInt(Produto::getQuant)
-								.reduce(0, (x,y) âˆ’> x + y);
-						   }
-						 * 
-						 */
-						
-						if(contador.isSuspenso()) 
-							suspensos += 1;
-						if(contador.getContAmarelo() == 1)
-							comUmAmarelo += 1;
-						if(contador.getContAmarelo() == 2)
-							comDoisAmarelos += 1;
-						if(contador.getContVermelho() == 1)
-							comUmVermelho += 1;
+				for(FichaMedica ficha : fichasMedicas) {
+					if(jogador.equals(ficha.getJogador()) && ficha.getNivelDaLesao().getValor() != 0) {
+						lesionados++;
 					}
 				}
 			}
 			
 			StringBuilder json = new StringBuilder();
 			json.append("{ ");
-			json.append(("\"suspensos\" : \"" + suspensos * 100 / jogadores.size() + "%\", "));
-			json.append(("\"comUmAmarelo\" : \"" + comUmAmarelo * 100 / jogadores.size() + "%\", "));
-			json.append(("\"comDoisAmarelos\" : \"" + comDoisAmarelos * 100 / jogadores.size() + "%\", "));
-			json.append(("\"comUmVermelho\" : \"" + comUmVermelho * 100 / jogadores.size() + "%\""));
+			json.append(("\"numLesionados\" : \"" + lesionados * 100 / jogadores.size() + "%\", "));
+			json.append(("\"porcentoLesionados\" : \"" + lesionados * 100 / jogadores.size() + "%\", "));
 			json.append(" }");
 			
 			return json.toString();
@@ -187,7 +150,7 @@ public class EstatisticaService {
 		}
 	}
 	
-	public String mediaToJson(Jogador jogador, Campeonato campeonato) {
+	private String mediaToJson(Jogador jogador, Campeonato campeonato) {
 		List<Estatistica> estatisticasJogador = new ArrayList<Estatistica>();
 		
 		for(Partida p : campeonato.getTodasPartidas()) {
@@ -214,24 +177,12 @@ public class EstatisticaService {
 				.average()
 				.getAsDouble();
 		
-		StringBuilder json = new StringBuilder("{ \"tipo\" : \"media\", ");
-		json.append("\"passeDeBola\" : \"" + passe + "\", ");
+		StringBuilder json = new StringBuilder("{ \"id\" : 0, ");
+		json.append("\"jogador\" : " + jogador.toJson() + ", ");
+		json.append("\"passes\" : \"" + passe + "\", ");
 		json.append("\"gols\" : \"" + gols + "\", ");
 		json.append("\"assistencias\" : \"" + assist + "\" }");
 		
 		return json.toString();
-	}
-	
-	
-	public <T> Collector<T, ?, T> toElement() {
-	    return Collectors.collectingAndThen(
-	            Collectors.toList(),
-	            list -> {
-	                if (list.size() != 1) {
-	                    throw new IllegalStateException();
-	                }
-	                return list.get(0);
-	            }
-	    );
 	}
 }

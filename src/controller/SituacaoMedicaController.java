@@ -5,11 +5,11 @@ import org.simpleframework.http.Response;
 import org.simpleframework.http.Status;
 
 import service.FichaMedicaService;
-import service.JogadorService;
+import service.TimeService;
 
 public class SituacaoMedicaController implements Controller {
 	static FichaMedicaService fichaService = new FichaMedicaService();
-	static JogadorService jogadorService = new JogadorService();
+	static TimeService timeService = new TimeService();
 	
 	@Override
 	public void rotearRequisicao(Request request, Response response) {
@@ -31,7 +31,7 @@ public class SituacaoMedicaController implements Controller {
 						this.naoEncontrado(response, path);
 					
 				} else if("list".equals(acao)) {
-					message = jogadorService.listarJogadores(request);
+					message = timeService.carregarTime(request);
 					
 					if(message != null)
 						this.enviaResposta(Status.OK, response, message);

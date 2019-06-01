@@ -1,31 +1,46 @@
 package dao;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import model.Campeonato;
+import model.Estatistica;
+import model.Partida;
+
 public class ExemploDAO {
 	
 	public static void main(String[]args) {
-	
-//		JogadorDAO player = new JogadorDAO();
-//		
-//		FichaMedica teste = new FichaMedica(13, NivelLesao.BAIXA, LocalDateTime.now().minusMonths(1));
-//		teste.setJogador(player.get(3));
-//		
-//		FichaMedicaDAO testeDAO = new FichaMedicaDAO();
-//		//testeDAO.add(teste);
-//		
-//		try {
-////			List<FichaMedica> lista = testeDAO.getAll();
-//			
-////			for(FichaMedica ficha : lista) {
-////				System.out.println(ficha.toJson().toString());
-////			}
-//			System.out.println(testeDAO.get(12).toJson().toString());
-//		} catch (NumberFormatException e) {
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//	
-
+		
+		try {
+			EstatisticaDAO estatisticaDAO = new EstatisticaDAO();
+			PartidaDAO partidaDAO = new PartidaDAO();
+			CampeonatoDAO campeonatoDAO = new CampeonatoDAO();
+			
+			Campeonato c = campeonatoDAO.get(1);
+			Partida p = new Partida();
+			
+			List<Estatistica> listaEstatistica = estatisticaDAO.getAll().stream()
+					.filter(e -> e.getCampeonato().equals(c))
+					.collect(Collectors.toList());
+			
+			p.setEstatisticasJogador(listaEstatistica);
+			partidaDAO.add(p);
+			
+			for(Partida pa : partidaDAO.getAll()) {
+				c.inserirPartida(pa);
+			}
+			
+			campeonatoDAO.update(c);
+			
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 }

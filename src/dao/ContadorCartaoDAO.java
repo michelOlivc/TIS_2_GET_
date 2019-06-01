@@ -14,11 +14,11 @@ public class ContadorCartaoDAO implements GenericDAO<Contadordecartoes, Integer>
 	static final String ARQUIVO = "Contador.txt";
 	static final String SEQUENCE = "sequence_Contador.txt";
 	
-	CampeonatoDAO campeonatoDAO = new CampeonatoDAO();
-	JogadorDAO jogadorDAO=new JogadorDAO();
-
 	@Override
 	public Contadordecartoes get(Integer id) {
+		CampeonatoDAO campeonatoDAO = new CampeonatoDAO();
+		JogadorDAO jogadorDAO=new JogadorDAO();
+		
 		Contadordecartoes retorno = null;
 		Contadordecartoes j = null;
 
@@ -108,6 +108,9 @@ public class ContadorCartaoDAO implements GenericDAO<Contadordecartoes, Integer>
 
 	@Override
 	public List<Contadordecartoes> getAll() throws NumberFormatException, IOException {
+		CampeonatoDAO campeonatoDAO = new CampeonatoDAO();
+		JogadorDAO jogadorDAO=new JogadorDAO();
+		
 		List<Contadordecartoes> Contadordecartoes = new ArrayList<Contadordecartoes>();
 		Contadordecartoes j = null;
 		BufferedReader buffer_entrada = new BufferedReader(new FileReader(ARQUIVO));
