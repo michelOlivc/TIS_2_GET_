@@ -3,19 +3,12 @@
 .conteudo {
     padding: 15px;
     min-height: 600px;
+    background-color: rgb(0,0,0,0.1);
+
 }
 
 #logo {
     min-height: 150px;
-}
-
-header > ul {
-    padding: 15px 0;
-    background-color: black;
-}
-
-a.nav-link, div.dropdown-menu {
-    margin-left: 135px;
 }
 
 .navbar {
@@ -68,4 +61,13 @@ span#id {
 /* REGRA DA TELA DE SITUAÇÃO MÉDICA */
 .campo-afast {
     visibility: hidden;
+}
+
+/* REGRA DO MODAL DE RESULTADOS DA TELA DE ESCALAÇÃO */
+#resultados th {
+    vertical-align: middle;
+}
+
+.modal-lg {
+    width: 95%;
 }

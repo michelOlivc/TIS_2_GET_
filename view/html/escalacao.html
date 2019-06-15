@@ -10,7 +10,7 @@
     <header></header>
     <div class="conteudo" style="padding-top: 30px;">
         <div class="row">
-            <div class="col-xl-3 col-lg-3 col-md-3">
+            <div class="col-xl-3 col-lg-3 col-md-4">
                 <div class="tituloTable">Lista de Jogadores</div>
                 <table class="table" id="listaTime">
                     <tr>
@@ -20,12 +20,19 @@
                     <!-- append jogadores -->
                 </table>
             </div>
-            <div class="col-xl-6 col-lg-6 col-md-6">
-                <form action="" method="POST" id="form-jogador">
+            <div class="col-xl-6 col-lg-6 col-md-4">
+                <form action="" id="form-jogador" onsubmit="return false;">
                     <div class="form-group row">
-                        <div class="col-xl-12 col-lg-12 col-md-12">
-                            <h5>Selecione um jogador</h5><br>
-                            <select name="jogadores" id="selectJogadores" class="form-control">
+                        <div class="col-xl-7 col-lg-7 col-md-12">
+                            <h5 style="margin-bottom: 10px">Selecione o jogador</h5>
+                            <select name="jogadores" id="selectJogadores" class="form-control" disabled="disabled">
+                                <option value="<null>"></option>
+                                <!-- append options -->
+                            </select>
+                        </div>                            
+                        <div class="col-xl-5 col-lg-5 col-md-12">
+                            <h5 style="margin-bottom: 10px">Selecione o campeonato</h5>
+                            <select name="campeonatos" id="selectCampeonatos" class="form-control">
                                 <option value="<null>"></option>
                                 <!-- append options -->
                             </select>
@@ -60,13 +67,14 @@
                         </div>
                     </div>
                     <div class="row">
-                        &emsp;<button class="btn btn-primary" onclick="">Escalar Jogador</button>&emsp;
-                        &emsp;<button class="btn btn-primary" onclick="">Remover da escalação</button>&emsp;
-                        &emsp;<button class="btn btn-primary" onclick="">Limpar dados</button>&emsp;
+                        <button class="btn btn-primary" onclick="includeJogador()">Escalar Jogador</button>&emsp;
+                        &emsp;<button class="btn btn-primary" onclick="removeJogador()">Remover da escalação</button>&emsp;
+                        &emsp;<button class="btn btn-primary" onclick="removeAll()">Remover todos</button>&emsp;
+                        &emsp;<button class="btn btn-primary" onclick="finalizeEscalacao()">Finalizar escalação</button>&emsp;
                     </div>
                 </form>
             </div>
-            <div class="col-xl-3 col-lg-3 col-md-3">
+            <div class="col-xl-3 col-lg-3 col-md-4">
                 <div class="tituloTable">Escalação</div>
                 <table class="table" id="escalacao">
                     <tr>
@@ -78,11 +86,303 @@
             </div>
         </div>
     </div>
+
+    <!-- Resultado da escalação -->
+    <div class="modal" tabindex="-1" role="dialog" id="resultadosModal">
+        <div class="modal-dialog modal-xl" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title" id="cabecalho-resultados">Resultado da partida</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <table class="table" id="resultados">
+                <thead>
+                    <tr>
+                        <th>Jogador</th><th>Gols</th><th>Assistências</th><th>Passes</th>
+                        <th>Situação médica</th><th>Cartões amarelos</th><th>Cartões vermelhos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- append resultados -->
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="window.location.href='index.html';">
+                Voltar para a página inicial
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
     <footer></footer>
     <script src='../js/jquery.js' type='text/javascript'></script>
     <script src="../bootstrap-4.3.1/js/bootstrap.js" type='text/javascript'></script>
     <script src="../js/ajaxRequest.js" type='text/javascript'></script>
     <script src="../js/includes.js" type="text/javascript"></script>
+    <script>
+        window.onload = function() {
+            fillSelect();
+            listJogadores();
+        };
+
+        $("#selectCampeonatos").on("change", function() {
+            listJogadoresEscalados()
+        });
+
+        function listJogadores() {
+            var xmlhttp = new FactoryXMLHttpRequest();
+
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4) {
+                    var resposta = JSON.parse(xmlhttp.responseText);
+                    var listaJogadores = resposta.listaJogadores;
+
+                    for(var i = 0; i < listaJogadores.length; i++) {
+                        var content = `<tr onclick="getJogador(${listaJogadores[i].id})">
+                                        <td>${listaJogadores[i].nome}</td>
+                                        <td>${listaJogadores[i].posicao}</td>
+                                    </tr>`;
+                        $("#listaTime").append(content);
+                        
+                        var comboJogadores = `<option value="${listaJogadores[i].id}">${listaJogadores[i].nome}</option>`;
+                        $("#selectJogadores").append(comboJogadores);
+                    }
+                }
+            }
+
+            if (xmlhttp) {
+                xmlhttp.open('get', 'http://localhost:' + porta + '/Escalacao/jogadores', true);
+                xmlhttp.send();
+            }
+        }
+
+        function fillSelect() {
+            var xmlhttp = new FactoryXMLHttpRequest();
+
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4) {
+                    var jsonObj = JSON.parse(xmlhttp.responseText);
+
+                    $(jsonObj.listaCampeonatos).each(function () {
+                        var content = `<option value="${this.id}">${this.nome}</option>`;
+                        $("#selectCampeonatos").append(content);
+                    });
+                }
+            }
+
+            if (xmlhttp) {
+                xmlhttp.open('get', 'http://localhost:' + porta + '/Escalacao/campeonatos');
+                xmlhttp.send();
+            }
+        }
+
+        function getJogador(id) {
+            var xmlhttp = new FactoryXMLHttpRequest();
+
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4) {
+                    var jsonObj = JSON.parse(xmlhttp.responseText);
+                    
+                    var selecionado = $("option[selected='selected']");
+                    if (selecionado !== undefined && selecionado.length > 0) {
+                        selecionado.removeAttr("selected");
+                    }                    
+                    
+                    $("option[value='" + jsonObj.id + "']").attr("selected", "selected");
+
+                    $("#dadosNome").html(jsonObj.nome);
+                    $("#dadosPosicao").html(jsonObj.posicao);
+                    $("#dadosFolego").html(numberToSymbol(jsonObj.folego, "&#9733;"));
+                    $("#dadosVelocidade").html(numberToSymbol(jsonObj.velocidade, "&#9733;"));
+                    $("#dadosDrible").html(numberToSymbol(jsonObj.drible, "&#9733;"));
+                }
+            }
+
+            if (xmlhttp) {
+                xmlhttp.open('get', 'http://localhost:' + porta + '/Escalacao/jogador/' + id);
+                xmlhttp.send();
+            }
+        }
+
+        function listJogadoresEscalados() {
+            var xmlhttp = new FactoryXMLHttpRequest();
+           
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4) {
+                    var resposta = JSON.parse(xmlhttp.responseText);
+                    var listaJogadores = resposta.listaJogadores;
+
+                    $("#escalacao").html("<tr><th>Jogador</th><th>Posição</th></tr>");
+
+                    for(var i = 0; i < listaJogadores.length; i++) {
+                        var content = `<tr onclick="getJogador(${listaJogadores[i].id})">
+                                        <td>${listaJogadores[i].nome}</td>
+                                        <td>${listaJogadores[i].posicao}</td>
+                                    </tr>`;
+                        $("#escalacao").append(content);
+                    }
+                }
+            }
+
+            if (xmlhttp) {
+                var campeonato = $("#selectCampeonatos").val();
+
+                xmlhttp.open('get', 'http://localhost:' + porta + '/Escalacao/escalados?campeonato=' + campeonato);
+                xmlhttp.send();
+            }
+        }
+
+        function includeJogador() {
+            var xmlhttp = new FactoryXMLHttpRequest();
+
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4) {
+                    var escalados = JSON.parse(xmlhttp.responseText).listaJogadores;
+                    loadEscalados(escalados)
+                }
+            }
+
+            if (xmlhttp) {
+                var jogador = $("#selectJogadores").val();
+                var campeonato = $("#selectCampeonatos").val();
+                
+                if(!jogadorJaEscalado(jogador)) {
+                    xmlhttp.open('get', 'http://localhost:' + porta + '/Escalacao/include?jogador=' + jogador + '&campeonato=' + campeonato);
+                    xmlhttp.send();
+                }
+            }
+        }
+
+        function removeJogador() {
+            var xmlhttp = new FactoryXMLHttpRequest();
+
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4) {
+                    loadEscalados(JSON.parse(xmlhttp.responseText).listaJogadores);
+                }
+            }
+
+            if (xmlhttp) {
+                var jogador = $("#selectJogadores").val();
+                var campeonato = $("#selectCampeonatos").val();
+                
+                xmlhttp.open('get', 'http://localhost:' + porta + '/Escalacao/remove?jogador=' + jogador + '&campeonato=' + campeonato);
+                xmlhttp.send();
+            }
+        }
+
+        function removeAll() {
+            var xmlhttp = new FactoryXMLHttpRequest();
+
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4) {
+                    loadEscalados(JSON.parse(xmlhttp.responseText).listaJogadores);
+                }
+            }
+
+            if (xmlhttp) {
+                var campeonato = $("#selectCampeonatos").val();
+                
+                xmlhttp.open('get', 'http://localhost:' + porta + '/Escalacao/clear?campeonato=' + campeonato);
+                xmlhttp.send();
+            }
+        }
+
+        function finalizeEscalacao() {
+            var xmlhttp = new FactoryXMLHttpRequest();
+
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4) {
+                    var jsonObj = JSON.parse(xmlhttp.responseText);
+                    carregaResultados(jsonObj);                    
+                }
+            }
+
+            if (xmlhttp) {
+                var campeonato = $("#selectCampeonatos").val();
+                
+                if(!escalacaoIncompleta()) {
+                    xmlhttp.open('get', 'http://localhost:' + porta + '/Escalacao/finalizar?campeonato=' + campeonato);
+                    xmlhttp.send();
+                }
+            }
+        }
+
+        function numberToSymbol(num, symbol) {
+            var text = "";
+            for (i = 0; i < num; i++) {
+                text += symbol + " ";
+            }
+            
+            return text;
+        }
+
+        function loadEscalados(listaJogadores) {
+            $("#escalacao").html("<tr><th>Jogador</th><th>Posição</th></tr>");
+            
+            for(var i = 0; i < listaJogadores.length; i++) {
+                var content = `<tr onclick="getJogador(${listaJogadores[i].id})">
+                                    <td>${listaJogadores[i].nome}</td>
+                                    <td>${listaJogadores[i].posicao}</td>
+                               </tr>`;
+                $("#escalacao").append(content);
+            }
+        }
+
+        function carregaResultados(resultados) {
+            $("#cabecalho-resultados").html(resultados.campeonato + " - Rodada " + resultados.rodada);
+            
+            var estatisticas = resultados.estatisticas;
+            var fichas = resultados.fichas;
+            var cartoes = resultados.cartoes;
+
+            for(var i = 0; i < estatisticas.length; i++) {
+                var content = `
+                    <tr>
+                        <td>${estatisticas[i].jogador.nome}</td>
+                        <td>${estatisticas[i].gols}</td>
+                        <td>${estatisticas[i].assistencias}</td>
+                        <td>${estatisticas[i].passes}</td>
+                        <td>${fichas[i].nivelDaLesao == 0 ? 'Saudável' : 'Lesionado'}</td>
+                        <td>${cartoes[i].cartoesAmarelos}</td>
+                        <td>${cartoes[i].cartoesVermelhos}</td>
+                    </tr>
+                `;
+
+                $("#resultados tbody").append(content);
+            }
+
+            $("#resultadosModal").modal();
+        }
+
+        function jogadorJaEscalado(id) {
+            var escalados = $("#escalacao").children().filter("tr[onclick*='" + id + "']");
+
+            if(escalados.length != 0) {
+                alert("A lista de jogadores escalados já contém o jogador selecionado. Selecione outro jogador.");
+                return true;
+            } else {
+                return false;
+            }
+        }
+        
+        function escalacaoIncompleta() {
+            // subtrai 1 filho por causa da linha contendo o cabeçalho
+            var jogadoresEscalados = $("#escalacao").children().length - 1;
+
+            if(jogadoresEscalados < 11) {
+                alert("Não é possível finalizar uma escalação contendo menos de 11 jogadores.")
+                return true;
+            } else {
+                return false;
+            }
+        }
+    </script>
 </body>
 
 </html>

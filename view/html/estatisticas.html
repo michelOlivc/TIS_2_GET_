@@ -33,7 +33,7 @@
                             </select>
                         </div>
                         <div class="col-xl-12 col-lg-12 col-md-12" style="margin: 40px 0">
-                            <table class="table table-borderless">
+                            <table class="table table-borderless" id="estatisticas">
                                 <tr>
                                     <th colspan="2">Última partida</th>
                                     <th colspan="2">Média do campeonato</th>
@@ -56,6 +56,17 @@
                                     <td>Assistências</td>
                                     <td id="assistMedia"></td>
                                 </tr>
+                                <tr>
+                                    <th colspan="2" style="padding-top: 40px;">
+                                        Estatísticas do time
+                                    </th>
+                                </tr>
+                                <tr id="lesoes">
+
+                                </tr>
+                                <tr id="cartoes">
+
+                                </tr>                                
                             </table>
                         </div>
                     </div>
@@ -72,7 +83,12 @@
         window.onload = function() {
             listJogadores();
             fillSelect();
+            getLesionadosTime();
         };
+
+        $("#campeonato").on("change", function(){
+            getSuspensosTime();
+        });
 
         function listJogadores() {
             var xmlhttp = new FactoryXMLHttpRequest();
@@ -156,6 +172,84 @@
                 xmlhttp.open('get', 'http://localhost:' + porta + '/Estatistica/campeonatos');
                 xmlhttp.send();
             }
+        }
+
+        function getLesionadosTime() {
+            var xmlhttp = new FactoryXMLHttpRequest();
+
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4) {
+                    var dados = JSON.parse(xmlhttp.responseText);
+                    
+                    if(dados.numLesionados > 0) {
+                        var content = `<tr><td colspan="2">${dados.numLesionados > 1 ? `${dados.numLesionados} jogadores estão lesionados` : 
+                            `${dados.numLesionados} jogador está lesionado`} (${dados.porcentoLesionados} do time)</td></tr>`;
+
+                        $("#estatisticas").append(content)
+                    } else {
+                        $("#estatisticas").append('<tr><td colspan="2">Não há jogadores lesionados no time</td></tr>');
+                    }
+                }
+            }
+            
+            if (xmlhttp) {                
+                xmlhttp.open('get', 'http://localhost:'+porta+'/Estatistica/lesionados');
+                xmlhttp.send();
+            }
+        }
+
+        function getSuspensosTime() {
+            var xmlhttp = new FactoryXMLHttpRequest();
+
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4) {
+                    var dados = JSON.parse(xmlhttp.responseText);
+                    
+                    carregarCartões(dados);
+                }
+            }
+            
+            if (xmlhttp) {
+                var idCampeonato = $("#campeonato").val();
+                
+                xmlhttp.open('get', 'http://localhost:'+porta+'/Estatistica/suspensos?campeonato='+idCampeonato);
+                xmlhttp.send();
+            }
+        }
+
+        function carregarCartões(dados) {
+            var suspensos = dados.suspensos;
+            var umAmarelo = dados.comUmAmarelo;
+            var doisAmarelos = dados.comDoisAmarelos;
+            var umVermelho = dados.comUmVermelho;
+
+            if(suspensos.numero > 0) {
+                var content = `<td colspan="2">${suspensos.numero > 1 ?  `${suspensos.numero} jogadores estão suspensos` : 
+                    `${suspensos.numero} jogador está suspenso`} do(a) ${dados.campeonato} (${suspensos.porcentagem} do time)</td>`;
+                
+                $("#cartoes").append(content);
+            }
+
+            if(umAmarelo.numero > 0) {
+                var content = `<td colspan="2">${umAmarelo.numero > 1 ?  `${umAmarelo.numero} jogadores possuem` : 
+                    `${umAmarelo.numero} jogador possui`} 1 cartão amarelo no(a) ${dados.campeonato} (${umAmarelo.porcentagem} do time)</td>`;
+                
+                $("#cartoes").append(content);
+            }
+
+            if(doisAmarelos.numero > 0) {
+                var content = `<td colspan="2">${doisAmarelos.numero > 1 ?  `${doisAmarelos.numero} jogadores possuem` : 
+                    `${doisAmarelos.numero} jogador possui`} 2 cartões amarelos no(a) ${dados.campeonato} (${doisAmarelos.porcentagem} do time)</td>`;
+                
+                $("#cartoes").append(content);
+            }
+
+            if(umVermelho.numero > 0) {
+                var content = `<td colspan="2">${umVermelho.numero > 1 ?  `${umVermelho.numero} jogadores possuem` : 
+                    `${umVermelho.numero} jogador possui`} 1 cartão vermelho no(a) ${dados.campeonato} (${umVermelho.porcentagem} do time)</td>`;
+                
+                $("#cartoes").append(content);
+            }            
         }
     </script>
 </body>

@@ -16,9 +16,9 @@ function includeImports() {
 function includeHeader() {
     var content = `
     <div id="logo"></div>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-custom">
+    <nav class="navbar navbar-expand-lg navbar-expand-md navbar-light bg-light navbar-custom">
     <div class="collapse navbar-collapse" id="conteudoNavbarSuportado">
-        <ul class="nav nav-pills nav-fill">
+        <ul class="nav nav-pills nav-fill w-100">
             <li class="nav-item">
                 <a class="nav-link" href="medico.html">Situação médica</a>
             </li>
