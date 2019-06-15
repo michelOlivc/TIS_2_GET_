@@ -3,9 +3,9 @@ package service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import org.json.JSONObject;
 import org.simpleframework.http.Query;
 import org.simpleframework.http.Request;
 
@@ -62,28 +62,13 @@ public class EstatisticaService {
 		return campeonatoService.listarCampeonato(request);
 	}
 	
-//	public String consultarMediaEstatisticasPorCampeonato(Request request) {
-//		try {
-//			Query query = request.getQuery();
-//			
-//			Jogador jogador = jogadorDAO.get(Integer.parseInt(query.get("idJogador")));
-//			Campeonato campeonato = campeonatoDAO.get(Integer.parseInt(query.get("idCampeonato")));
-//			
-//			String json = mediaToJson(jogador, campeonato);
-//			
-//			return json;
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			return "<ERRO>Erro ao consultar estatatística";
-//		}
-//	}
-	
 	public String consultarSuspensosTimePorCampeonato(Request request) {
 		try {
 			Query query = request.getQuery();
 			
-			Campeonato campeonato = campeonatoDAO.get(Integer.parseInt(query.get("idCampeonato")));
-			double suspensos = 0.0, comUmAmarelo = 0.0, comDoisAmarelos = 0.0, comUmVermelho = 0.0;
+			Campeonato campeonato = campeonatoDAO.get(Integer.parseInt(query.get("campeonato")));
+			double numSuspensos = 0.0, comUmAmarelo = 0.0, comDoisAmarelos = 0.0, comUmVermelho = 0.0;
+			
 			List<Jogador> jogadores =  timeDAO.get().getListaJogadores();
 			List<Contadordecartoes> contadoresCartao = contadorDAO.getAll();
 			
@@ -92,7 +77,7 @@ public class EstatisticaService {
 					if(jogador.equals(contador.getJogador())
 							&& campeonato.equals(contador.getCampeonato())) {
 						if(contador.isSuspenso()) 
-							suspensos += 1;
+							numSuspensos += 1;
 						if(contador.getContAmarelo() == 1)
 							comUmAmarelo += 1;
 						if(contador.getContAmarelo() == 2)
@@ -103,19 +88,30 @@ public class EstatisticaService {
 				}
 			}
 			
-			StringBuilder json = new StringBuilder();
-			json.append("{ ")
-			 	.append(("\"suspensos\" : "))
-			 	.append("{ \"numero\" : \"" + suspensos + "\", \"porcentagem\" : " + suspensos * 100 / jogadores.size() + "%\" },")
-			 	.append(("\"comUmAmarelo\" : "))
-			 	.append("{ \"numero\" : \"" + comUmAmarelo + "\", \"porcentagem\" : " + comUmAmarelo * 100 / jogadores.size() + "%\" },")
-			 	.append(("\"comDoisAmarelos\" : "))
-			 	.append("{ \"numero\" : \"" + comDoisAmarelos + "\", \"porcentagem\" : " + comDoisAmarelos * 100 / jogadores.size() + "%\" },")
-			 	.append(("\"comUmVermelho\" : "))
-			 	.append("{ \"numero\" : \"" + comUmVermelho + "\", \"porcentagem\" : " + comUmVermelho * 100 / jogadores.size() + "%\" }")
-			 	.append(" }");
+			JSONObject suspensos = new JSONObject();
+			suspensos.put("numero", numSuspensos);
+			suspensos.put("porcentagem", numSuspensos * 100 / jogadores.size() + "%");
 			
-			return json.toString();
+			JSONObject umAmarelo = new JSONObject();
+			umAmarelo.put("numero", comUmAmarelo);
+			umAmarelo.put("porcentagem", comUmAmarelo * 100 / jogadores.size() + "%");
+			
+			JSONObject doisAmarelo = new JSONObject();
+			doisAmarelo.put("numero", comDoisAmarelos);
+			doisAmarelo.put("porcentagem", comDoisAmarelos * 100 / jogadores.size() + "%");
+			
+			JSONObject umVermelho = new JSONObject();
+			umVermelho.put("numero", comUmVermelho);
+			umVermelho.put("porcentagem", comUmVermelho * 100 / jogadores.size() + "%");
+			
+			JSONObject obj = new JSONObject();
+			obj.put("campeonato", campeonato.getNome());
+			obj.put("suspensos", suspensos);
+			obj.put("comUmAmarelo", umAmarelo);
+			obj.put("comDoisAmarelos", doisAmarelo);
+			obj.put("comUmVermelho", umVermelho);
+			
+			return obj.toString();
 		} catch (NumberFormatException | IOException e) {
 			e.printStackTrace();
 			return "<ERRO>Houve um problema ao carregar as estatisticas.";
@@ -137,13 +133,11 @@ public class EstatisticaService {
 				}
 			}
 			
-			StringBuilder json = new StringBuilder();
-			json.append("{ ");
-			json.append(("\"numLesionados\" : \"" + lesionados * 100 / jogadores.size() + "%\", "));
-			json.append(("\"porcentoLesionados\" : \"" + lesionados * 100 / jogadores.size() + "%\", "));
-			json.append(" }");
+			JSONObject obj = new JSONObject();
+			obj.put("numLesionados", lesionados);
+			obj.put("porcentoLesionados", lesionados * 100 / jogadores.size() + "%");
 			
-			return json.toString();
+			return obj.toString();
 		} catch (NumberFormatException | IOException e) {
 			e.printStackTrace();
 			return "<ERRO>Houve um problema ao carregar as estatisticas.";
@@ -177,12 +171,12 @@ public class EstatisticaService {
 				.average()
 				.getAsDouble();
 		
-		StringBuilder json = new StringBuilder("{ \"id\" : 0, ");
-		json.append("\"jogador\" : " + jogador.toJson() + ", ");
-		json.append("\"passes\" : \"" + passe + "\", ");
-		json.append("\"gols\" : \"" + gols + "\", ");
-		json.append("\"assistencias\" : \"" + assist + "\" }");
+		JSONObject obj = new JSONObject();
+		obj.put("jogador", jogador.toJson());
+		obj.put("passes", passe);
+		obj.put("gols", gols);
+		obj.put("assistencias", assist);
 		
-		return json.toString();
+		return obj.toString();
 	}
 }

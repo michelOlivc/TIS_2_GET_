@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.FichaMedica;
+import model.Jogador;
 import model.enums.NivelLesao;
 	
 	public class FichaMedicaDAO implements GenericDAO<FichaMedica, Integer> {
@@ -119,7 +120,7 @@ import model.enums.NivelLesao;
 
 				f = new FichaMedica();
 				f.setId(Integer.parseInt(dados[0]));
-				f.setJogador(jogDAO.get(Integer.parseInt(dados[1])));
+				f.setJogador(jogDAO.lazyGet(Integer.parseInt(dados[1])));
 				f.setNivelDaLesao(NivelLesao.findByValor(Integer.parseInt(dados[2])));
 				f.setDataEntrada(LocalDateTime.parse(dados[3]));
 				
@@ -142,5 +143,16 @@ import model.enums.NivelLesao;
 				buffer_saida.flush();
 			}
 			buffer_saida.close();
+		}
+		
+		public FichaMedica findByJogador(Jogador jogador) throws Exception {
+			List<FichaMedica> fichas = getAll();
+			
+			for(FichaMedica ficha : fichas) {
+				if(ficha.getJogador().equals(jogador))
+					return ficha;
+			}
+			
+			return null;
 		}
 }

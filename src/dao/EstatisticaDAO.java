@@ -48,6 +48,31 @@ public class EstatisticaDAO implements GenericDAO<Estatistica, Integer> {
 		}
 		return retorno;
 	}
+	
+	public Estatistica lazyGet(Integer id) {
+		Estatistica retorno = null;
+		Estatistica j = null;
+
+		try (BufferedReader buffer_entrada = new BufferedReader(new FileReader(ARQUIVO))) {
+			String linha;
+
+			while ((linha = buffer_entrada.readLine()) != null) {
+				String[] dados = linha.split(";");
+
+				j = new Estatistica();
+				j.setId(Integer.parseInt(dados[0]));
+
+				if (id.equals(j.getId())) {
+					retorno = j;
+					break;
+				}
+			}
+		} catch (Exception e) {
+			System.out.println("ERRO ao ler a estatistica '" + j.getId() + "' do disco rígido!");
+			e.printStackTrace();
+		}
+		return retorno;
+	}
 
 	@SuppressWarnings("resource")
 	@Override
@@ -156,4 +181,25 @@ public class EstatisticaDAO implements GenericDAO<Estatistica, Integer> {
 		buffer_saida.close();
 	}
 	
+	public Integer saveAndReturnId(Estatistica e) {
+		try {
+			BufferedReader bufferInSequence = new BufferedReader(new FileReader(SEQUENCE));
+
+			Integer generatedId;
+			String linha = bufferInSequence.readLine();
+			
+			if (linha != null) {
+				generatedId = Integer.parseInt(linha);
+				bufferInSequence.close();
+			} else {
+				generatedId = 1;
+			}
+			
+			add(e);
+			return generatedId;
+		} catch(Exception ex) {
+			ex.printStackTrace();
+			return null;
+		}
+	}
 }

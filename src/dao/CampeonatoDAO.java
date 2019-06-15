@@ -110,11 +110,9 @@ public class CampeonatoDAO  implements GenericDAO<Campeonato, Integer> {
 			String separadorDeAtributo = ";";
 			bufferOutCampeonato.write(generatedId + separadorDeAtributo);
 			bufferOutCampeonato.write(t.getNome() + separadorDeAtributo);
-			bufferOutCampeonato.write(t.getJogos());
+			bufferOutCampeonato.write(t.getJogos() + separadorDeAtributo);
 			
 			if(t.getTodasPartidas() != null && !t.getTodasPartidas().isEmpty()) {
-				bufferOutCampeonato.write(separadorDeAtributo);
-				
 				for(Partida p : t.getTodasPartidas()) {
 					if(t.getTodasPartidas().indexOf(p) != -1
 							&& t.getTodasPartidas().indexOf(p) != t.getTodasPartidas().size() - 1)
@@ -214,11 +212,9 @@ public class CampeonatoDAO  implements GenericDAO<Campeonato, Integer> {
 		for (Campeonato j : list) {
 			buffer_saida.write(j.getId() + separador);
 			buffer_saida.write(j.getNome() + separador);
-			buffer_saida.write(j.getJogos());
+			buffer_saida.write(j.getJogos() + separador);
 			
 			if(j.getTodasPartidas() != null && !j.getTodasPartidas().isEmpty()) {
-				buffer_saida.write(separador);
-				
 				for(Partida p : j.getTodasPartidas()) {
 					if(j.getTodasPartidas().indexOf(p) != -1
 							&& j.getTodasPartidas().indexOf(p) != j.getTodasPartidas().size() - 1)

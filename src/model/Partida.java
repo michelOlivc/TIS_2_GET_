@@ -6,7 +6,7 @@ import org.json.JSONArray;
 
 import org.json.JSONObject;
 
-public class Partida implements JsonFormatter {
+public class Partida implements JsonFormatter, Comparable<Partida> {
 	private Integer id;
 	private List<Estatistica> estatisticasJogador;
 
@@ -58,5 +58,14 @@ public class Partida implements JsonFormatter {
 	@Override
 	public boolean equals(Object obj) {
 		return this.id == ((Partida) obj).id;
+	}
+
+	@Override
+	public int compareTo(Partida p) {
+		if(this.getId() < p.getId())
+			return -1;
+		if(this.getId() > p.getId())
+			return 1;			
+		return 0;
 	}
 }

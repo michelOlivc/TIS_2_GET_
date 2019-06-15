@@ -8,7 +8,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.Campeonato;
 import model.Contadordecartoes;
+import model.Jogador;
 
 public class ContadorCartaoDAO implements GenericDAO<Contadordecartoes, Integer> {
 	static final String ARQUIVO = "Contador.txt";
@@ -75,9 +77,9 @@ public class ContadorCartaoDAO implements GenericDAO<Contadordecartoes, Integer>
 			bufferOutContadordecartoes.write(generatedId + separadorDeAtributo);
 			bufferOutContadordecartoes.write(t.getJogador().getId() + separadorDeAtributo);
 			bufferOutContadordecartoes.write(t.getCampeonato().getId() + separadorDeAtributo);
+			bufferOutContadordecartoes.write(t.isSuspenso() + separadorDeAtributo);
 			bufferOutContadordecartoes.write(t.getContAmarelo() + separadorDeAtributo);
-			bufferOutContadordecartoes.write(t.getContVermelho() + separadorDeAtributo);
-			bufferOutContadordecartoes.write(t.isSuspenso() + "");
+			bufferOutContadordecartoes.write(t.getContVermelho() + "");
 			bufferOutContadordecartoes.write(System.getProperty("line.separator"));
 			bufferOutContadordecartoes.flush();
 
@@ -121,11 +123,11 @@ public class ContadorCartaoDAO implements GenericDAO<Contadordecartoes, Integer>
 
 			j = new Contadordecartoes();
 			j.setId(Integer.parseInt(dados[0]));
-			j.setJogador(jogadorDAO.get(Integer.parseInt(dados[1])));
-			j.setCampeonato(campeonatoDAO.get(Integer.parseInt(dados[2])));
-			j.setContAmarelo(Integer.parseInt(dados[3]));
-			j.setContVermelho(Integer.parseInt(dados[4]));
-			j.setSuspenso(Boolean.parseBoolean(dados[5]));
+			j.setJogador(jogadorDAO.lazyGet(Integer.parseInt(dados[1])));
+			j.setCampeonato(campeonatoDAO.lazyGet(Integer.parseInt(dados[2])));
+			j.setSuspenso(Boolean.parseBoolean(dados[3]));
+			j.setContAmarelo(Integer.parseInt(dados[4]));
+			j.setContVermelho(Integer.parseInt(dados[5]));
 			Contadordecartoes.add(j);
 		}
 
@@ -142,12 +144,21 @@ public class ContadorCartaoDAO implements GenericDAO<Contadordecartoes, Integer>
 			buffer_saida.write(j.getCampeonato().getId() + separador);
 			buffer_saida.write(j.isSuspenso() + separador);
 			buffer_saida.write(j.getContAmarelo() + separador);
-			buffer_saida.write(j.getContVermelho() + separador);
+			buffer_saida.write(j.getContVermelho() + "");
 			buffer_saida.write(System.getProperty("line.separator"));
 			buffer_saida.flush();
 		}
 		buffer_saida.close();
 	}
 
-
+	public Contadordecartoes findByCampeonatoJogador(Jogador jogador, 
+			Campeonato campeonato) throws Exception {
+		List<Contadordecartoes> contadores = getAll();
+		
+		for(Contadordecartoes c : contadores) {
+			if(c.getJogador().equals(jogador) && c.getCampeonato().equals(campeonato))
+				return c;
+		}
+		return null;
+	}
 }

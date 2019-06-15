@@ -2,6 +2,7 @@ package model;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 
 import org.json.JSONObject;
 
@@ -13,12 +14,14 @@ public class FichaMedica implements JsonFormatter {
 	private NivelLesao nivelDaLesao;
 	private LocalDateTime dataEntrada;
 
-	public FichaMedica() {}
+	public FichaMedica() {
+		this.dataEntrada = LocalDateTime.now();
+	}
 	
-	public FichaMedica(int id, NivelLesao nivelDaLesao, LocalDateTime dataEntrada) {
-		this.id = id;
+	public FichaMedica(NivelLesao nivelDaLesao, Jogador jogador) {
+		this.jogador = jogador;
 		this.nivelDaLesao = nivelDaLesao;
-		this.dataEntrada = dataEntrada;
+		this.dataEntrada = LocalDateTime.now();
 	}
 
 	public int getId() {
@@ -33,8 +36,8 @@ public class FichaMedica implements JsonFormatter {
 		return nivelDaLesao;
 	}
 
-	public String getDataEntrada() {
-		return dataEntrada.toString();
+	public LocalDateTime getDataEntrada() {
+		return dataEntrada;
 	}
 
 	public void setId(int id) {
@@ -53,31 +56,25 @@ public class FichaMedica implements JsonFormatter {
 		this.dataEntrada = dataEntrada;
 	}
 
-	public boolean liberarJogador(Jogador jogador){
-      /*fazer um if para cada nivel de lesao e comparar com a data de entrada
-       * se a data para cada nivel for maior que 30 proporcionalmente retorna true
-       * if(nivel lesao = 1 && data entrada > 30) return true*/
-		
-		if(nivelDaLesao.getValor() > diasAteLiberar(jogador)){
-			return true;
-		}else {
-			return false;
-		}
-   }
-
-	public void estarAptoLiberacaoEspecial() {
-		/*retorna true se tal jogador pode ser liberado especificamente*/
+	public void liberarJogador(Jogador jogador){
+		if(diasAteLiberar(jogador) == 0)
+			this.setNivelDaLesao(NivelLesao.findByValor(0));
+    }
+	
+	public void liberarEspecial(Jogador jogador) {
+		if(estaAptoLiberacaoEspecial())
+			this.setNivelDaLesao(NivelLesao.findByValor(0));
 	}
 
-	public int diasAteLiberar(Jogador jogador) {
-		/*pegar a current data time e retornar de acorod com o nivel da lesao quanto
-		 * falta para liberação*/
-		
-		LocalDateTime dataAtual =  LocalDateTime.now();
-		int atual = dataAtual.getHour()*24;
-		int entrada = dataEntrada.getHour()*24;
-		
-		return ((nivelDaLesao.getValor()+entrada)-atual);
+	private boolean estaAptoLiberacaoEspecial() {
+		if(diasAteLiberar(jogador) < 7) {
+			return true;
+		}
+		return false;
+	}
+
+	public long diasAteLiberar(Jogador jogador) {
+		return this.getDataEntrada().until(LocalDateTime.now(), ChronoUnit.DAYS);
 	}
 	
 	@Override

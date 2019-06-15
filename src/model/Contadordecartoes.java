@@ -86,30 +86,14 @@ public class Contadordecartoes implements JsonFormatter {
 		return this.id == ((Contadordecartoes) obj).id;
 	}
 
-	public void insereCartaoAmarelo() {
-		if (contAmarelo < 3) {
-			this.contAmarelo++;
-		} else if (contAmarelo == 3) {
-			this.contAmarelo = 0;
-		}
-	}
-
-	public void insereCartaoVermelho() {
-		if (contVermelho < 1) {
-			this.contVermelho++;
-		} else if (contVermelho == 1) {
-			this.contVermelho = 0;
-		}
-	}
-
-	public boolean testaQuantAmarelo() {
+	private boolean testaQuantAmarelo() {
 		if (contAmarelo < 3)
 			return false;
 		else
 			return true;
 	}
 
-	public boolean testaQuantVemerlho() {
+	private boolean testaQuantVermelho() {
 		if (contVermelho < 1)
 			return false;
 		else
@@ -117,20 +101,17 @@ public class Contadordecartoes implements JsonFormatter {
 	}
 
 	public void suspenderjogador() {
-		if (testaQuantAmarelo() == true || testaQuantVemerlho() == true)
+		if (testaQuantAmarelo() == true || testaQuantVermelho() == true)
 			setSuspenso(true);
 	}
 
 	public void cumprirSuspensao() {
 		if (isSuspenso() == true) {
-			if (testaQuantVemerlho() == true) {
-
+			if (testaQuantVermelho() == true)
 				contVermelho = 0;
-			}
-			if (testaQuantAmarelo() == true) {
-
+			if (testaQuantAmarelo() == true)
 				contAmarelo = 0;
-			}
+			
 			setSuspenso(false);
 		}
 	}
